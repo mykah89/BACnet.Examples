@@ -99,7 +99,7 @@ namespace DemoServer
                  m_ip_server.Iam(m_storage.DeviceId, m_supported_segmentation);
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
             }
