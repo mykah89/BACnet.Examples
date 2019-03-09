@@ -43,7 +43,7 @@ namespace BaCSharp
         [BaCSharpType(BacnetApplicationTags.BACNET_APPLICATION_TAG_ENUMERATED)]
         public virtual uint PROP_EVENT_STATE
         {
-            get { return m_PROP_EVENT_STATE; } // See BacnetEventNotificationData.BacnetEventStates  
+            get { return m_PROP_EVENT_STATE; } // See BacnetEventStates  
         }
 
         public BacnetBitString m_PROP_STATUS_FLAGS = new BacnetBitString();
