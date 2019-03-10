@@ -33,12 +33,15 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.IO.BACnet;
+using System.IO;
+using System.Data.SqlServerCe;
 
 namespace BacnetToDatabase
 {
     public partial class Main : Form
     {
         private BacnetClient bacnet_client;
+        private string dbName = "SampleDatabase.sdf";
 
         public Main()
         {
@@ -84,6 +87,24 @@ namespace BacnetToDatabase
 
         private void m_TransferButton_Click(object sender, EventArgs e)
         {
+            string dbFile = Path.Combine(Environment.CurrentDirectory, dbName);
+            string connString = @"Data Source=" + dbFile;
+            if (!File.Exists(dbFile))
+            {
+                SqlCeEngine en = new SqlCeEngine(connString);
+                //new System.Data.SqlServerCe.SqlCeEngin(connectionString);
+                en.CreateDatabase();
+
+                using (SqlCeConnection conn = new SqlCeConnection(connString))
+                {
+                    conn.Open();
+
+                    SqlCeCommand cmd = conn.CreateCommand();
+                    cmd.CommandText = "CREATE TABLE SampleTable(ObjectName NVARCHAR(255), PropertyId NVARCHAR(255),Value NVARCHAR(255))";
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
             //get Bacnet selection
             if (m_list.SelectedItems.Count <= 0)
             {
@@ -93,7 +114,7 @@ namespace BacnetToDatabase
             KeyValuePair<BacnetAddress, uint> device = (KeyValuePair<BacnetAddress, uint>)m_list.SelectedItems[0].Tag;
 
             //open database connection
-            System.Data.SqlServerCe.SqlCeConnection con = new System.Data.SqlServerCe.SqlCeConnection(@"Data Source=..\..\SampleDatabase.sdf");
+            SqlCeConnection con = new SqlCeConnection(connString);
             con.Open();
 
             //retrieve list of 'properties'
@@ -126,7 +147,7 @@ namespace BacnetToDatabase
                 }
 
                 //store in DB
-                using (System.Data.SqlServerCe.SqlCeCommand com = new System.Data.SqlServerCe.SqlCeCommand("INSERT INTO SampleTable VALUES(@ObjectName,@PropertyId,@Value)", con))
+                using (SqlCeCommand com = new SqlCeCommand("INSERT INTO SampleTable VALUES(@ObjectName,@PropertyId,@Value)", con))
                 {
                     com.Parameters.AddWithValue("@ObjectName", object_id.ToString());
                     com.Parameters.AddWithValue("@PropertyId", values[0].Tag.ToString());

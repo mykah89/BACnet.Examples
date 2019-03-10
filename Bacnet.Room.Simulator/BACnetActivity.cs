@@ -56,7 +56,6 @@ namespace DemoServer
             try
             {
                 //init
-                
                 PhysicalAddress macAddr =
                 (
                     from netiface in NetworkInterface.GetAllNetworkInterfaces()
