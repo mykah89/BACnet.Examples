@@ -156,7 +156,7 @@ namespace DemoBBMD
             status = DeviceStorage.ErrorCodes.Good;
 
 
-            if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && property_id == BacnetPropertyIds.PROP_OBJECT_LIST)
+            if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && property_id == BacnetPropertyIds.PROP_OBJECT_LIST)
             {
                 if (array_index == 0)
                 {
@@ -180,7 +180,7 @@ namespace DemoBBMD
                     value = list;
                 }
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED)
             {
                 BacnetValue v = new BacnetValue();
                 v.Tag = BacnetApplicationTags.BACNET_APPLICATION_TAG_BIT_STRING;
@@ -192,7 +192,7 @@ namespace DemoBBMD
                 v.Value = b;
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_PROTOCOL_SERVICES_SUPPORTED)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_PROTOCOL_SERVICES_SUPPORTED)
             {
                 BacnetValue v = new BacnetValue();
                 v.Tag = BacnetApplicationTags.BACNET_APPLICATION_TAG_BIT_STRING;
@@ -211,21 +211,21 @@ namespace DemoBBMD
                 v.Value = b;
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_SEGMENTATION_SUPPORTED)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_SEGMENTATION_SUPPORTED)
             {
                 BacnetValue v = new BacnetValue();
                 v.Tag = BacnetApplicationTags.BACNET_APPLICATION_TAG_ENUMERATED;
                 v.Value = (uint)BacnetSegmentations.SEGMENTATION_BOTH;
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_SYSTEM_STATUS)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_SYSTEM_STATUS)
             {
                 BacnetValue v = new BacnetValue();
                 v.Tag = BacnetApplicationTags.BACNET_APPLICATION_TAG_ENUMERATED;
                 v.Value = (uint)BacnetDeviceStatus.OPERATIONAL;      //can we be in any other mode I wonder?
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_ACTIVE_COV_SUBSCRIPTIONS)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_ACTIVE_COV_SUBSCRIPTIONS)
             {
                 List<BacnetValue> list = new List<BacnetValue>();
                 foreach (KeyValuePair<BacnetObjectId, List<Subscription>> entry in m_subscriptions)
@@ -253,7 +253,7 @@ namespace DemoBBMD
                 }
                 value = list;
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_OCTETSTRING_VALUE && object_id.instance == 0 && property_id == BacnetPropertyIds.PROP_PRESENT_VALUE)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_OCTETSTRING_VALUE && object_id.Instance == 0 && property_id == BacnetPropertyIds.PROP_PRESENT_VALUE)
             {
                 //this is our huge blob
                 BacnetValue v = new BacnetValue();
@@ -264,7 +264,7 @@ namespace DemoBBMD
                 v.Value = blob;
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_GROUP && property_id == BacnetPropertyIds.PROP_PRESENT_VALUE)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_GROUP && property_id == BacnetPropertyIds.PROP_PRESENT_VALUE)
             {
                 //get property list
                 IList<BacnetValue> properties;
@@ -568,7 +568,7 @@ namespace DemoBBMD
                     {
                         //a negative segmentACK perhaps
                         byte current_number = segmentation.sequence_number;
-                        sender.WaitForSegmentAck(adr, invoke_id, segmentation, 0);      //don't wait
+                        sender.WaitForSegmentAck(adr, invoke_id, segmentation, TimeSpan.FromSeconds(0));      //don't wait
                         if (segmentation.sequence_number != current_number)
                         {
                             Trace.WriteLine("Oh, a retransmit", null);
@@ -625,8 +625,8 @@ namespace DemoBBMD
             {
                 try
                 {
-                    if (object_id.type != BacnetObjectTypes.OBJECT_FILE) throw new Exception("File Reading on non file objects ... bah!");
-                    else if (object_id.instance != 0) throw new Exception("Don't know this file");
+                    if (object_id.Type != BacnetObjectTypes.OBJECT_FILE) throw new Exception("File Reading on non file objects ... bah!");
+                    else if (object_id.Instance != 0) throw new Exception("Don't know this file");
 
                     //this is a test file for performance measuring
                     int filesize = m_storage.ReadPropertyValue(object_id, BacnetPropertyIds.PROP_FILE_SIZE);        //test file is ~10mb
@@ -667,8 +667,8 @@ namespace DemoBBMD
             {
                 try
                 {
-                    if (object_id.type != BacnetObjectTypes.OBJECT_FILE) throw new Exception("File Reading on non file objects ... bah!");
-                    else if (object_id.instance != 0) throw new Exception("Don't know this file");
+                    if (object_id.Type != BacnetObjectTypes.OBJECT_FILE) throw new Exception("File Reading on non file objects ... bah!");
+                    else if (object_id.Instance != 0) throw new Exception("Don't know this file");
 
                     //this is a test file for performance measuring
                     //don't do anything with the content

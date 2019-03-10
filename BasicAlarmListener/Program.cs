@@ -31,6 +31,7 @@ using System.Text;
 using System.IO.BACnet;
 using System.Threading;
 using System.IO.BACnet.Storage;
+using System.IO.BACnet.EventNotification;
 
 namespace BasicAlarmListener
 {
@@ -87,10 +88,10 @@ namespace BasicAlarmListener
         /*****************************************************************************************************/
         /* This is the objective of this sample !                                                            */
         /*****************************************************************************************************/
-        static void handler_OnEventNotify(BacnetClient sender, BacnetAddress adr, BacnetEventNotificationData EventData)
+        static void handler_OnEventNotify(BacnetClient sender, BacnetAddress adr, byte invokeId, NotificationData EventData, bool needConfirm)
         {
-            string val = adr.ToString() + ":" + EventData.initiatingObjectIdentifier.type + ":" + EventData.initiatingObjectIdentifier.instance + ":" + EventData.eventObjectIdentifier.type + ":" + EventData.eventObjectIdentifier.instance;
-            Console.WriteLine(val + " " + EventData.fromState + " to " + EventData.toState + " " + EventData.notifyType.ToString());
+            string val = adr.ToString() + ":" + EventData.InitiatingObjectIdentifier.Type + ":" + EventData.InitiatingObjectIdentifier.Instance + ":" + EventData.EventObjectIdentifier.Type + ":" + EventData.EventObjectIdentifier.Instance;
+            Console.WriteLine(val + " to " + EventData.ToState + " " + EventData.NotifyType.ToString());
         }
 
         /*****************************************************************************************************/

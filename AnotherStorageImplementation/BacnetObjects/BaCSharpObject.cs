@@ -118,7 +118,7 @@ namespace BaCSharp
         {
             m_PROP_OBJECT_IDENTIFIER = ObjId;
             m_PROP_OBJECT_NAME = ObjName;
-            m_PROP_OBJECT_TYPE = (uint)ObjId.type;
+            m_PROP_OBJECT_TYPE = (uint)ObjId.Type;
             m_PROP_DESCRIPTION = Description;
         }
 

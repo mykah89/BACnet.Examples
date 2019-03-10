@@ -4,8 +4,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <ProjectGuid>{AB80ADFC-41DD-4E98-87CB-89C358B9E65D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net40</TargetFramework>
-	<RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <TargetFrameworks>net40</TargetFrameworks>	
     <AssemblyTitle>BacnetToDatabase</AssemblyTitle>
     <Product>BacnetToDatabase</Product>
     <Copyright>Copyright ©  2015</Copyright>
@@ -50,6 +49,7 @@
     <Compile Update="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

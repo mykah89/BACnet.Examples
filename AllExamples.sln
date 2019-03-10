@@ -1,27 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28705.295
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bacnet.Room.Simulator", "Bacnet.Room.Simulator\Bacnet.Room.Simulator.csproj", "{07552C4C-AD80-4645-AC91-D6138B5888AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bacnet.Room.Simulator", "Bacnet.Room.Simulator\Bacnet.Room.Simulator.csproj", "{07552C4C-AD80-4645-AC91-D6138B5888AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnotherStorageImplementation", "AnotherStorageImplementation\AnotherStorageImplementation.csproj", "{EE8E3C58-371E-4164-93DA-13D055D5BDDE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnotherStorageImplementation", "AnotherStorageImplementation\AnotherStorageImplementation.csproj", "{EE8E3C58-371E-4164-93DA-13D055D5BDDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BacnetToDatabase", "BacnetToDatabase\BacnetToDatabase.csproj", "{AB80ADFC-41DD-4E98-87CB-89C358B9E65D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BacnetToDatabase", "BacnetToDatabase\BacnetToDatabase.csproj", "{AB80ADFC-41DD-4E98-87CB-89C358B9E65D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicAdviseCOV", "BasicAdviseCOV\BasicAdviseCOV.csproj", "{C501E026-4977-49C6-8DCB-5B9600C17FF1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicAdviseCOV", "BasicAdviseCOV\BasicAdviseCOV.csproj", "{C501E026-4977-49C6-8DCB-5B9600C17FF1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicAlarmListener", "BasicAlarmListener\BasicAlarmListener.csproj", "{91C94BC2-B863-4415-AB5F-2C4D02B2F2CE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicAlarmListener", "BasicAlarmListener\BasicAlarmListener.csproj", "{91C94BC2-B863-4415-AB5F-2C4D02B2F2CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicReadWrite", "BasicReadWrite\BasicReadWrite.csproj", "{28F7604F-7DCD-4330-8261-55AEB2B0BAC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicReadWrite", "BasicReadWrite\BasicReadWrite.csproj", "{28F7604F-7DCD-4330-8261-55AEB2B0BAC4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicServer", "BasicServer\BasicServer.csproj", "{DB89E653-7DBF-45BC-A92E-3754D8091E89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicServer", "BasicServer\BasicServer.csproj", "{DB89E653-7DBF-45BC-A92E-3754D8091E89}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoBBMD", "DemoBBMD\DemoBBMD.csproj", "{A2CE9357-71B6-40F7-97C7-74AF1E5659A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DemoBBMD", "DemoBBMD\DemoBBMD.csproj", "{A2CE9357-71B6-40F7-97C7-74AF1E5659A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaspberrySample", "RaspberrySample\RaspberrySample.csproj", "{47FC9B60-CC4A-479C-8267-DCEEE53067AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RaspberrySample", "RaspberrySample\RaspberrySample.csproj", "{47FC9B60-CC4A-479C-8267-DCEEE53067AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjectBrowseSample", "ObjectBrowseSample\ObjectBrowseSample.csproj", "{CD8499E5-8FB1-44FC-9B42-BB437C58AAA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectBrowseSample", "ObjectBrowseSample\ObjectBrowseSample.csproj", "{CD8499E5-8FB1-44FC-9B42-BB437C58AAA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Submodules", "Submodules", "{4F76B809-8711-4AE3-81DD-B3A9C7652B80}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BACnet", "BACnet\BACnet.csproj", "{AAFD9727-F97F-4CCE-8ADE-F845E5171929}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,8 +73,18 @@ Global
 		{CD8499E5-8FB1-44FC-9B42-BB437C58AAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD8499E5-8FB1-44FC-9B42-BB437C58AAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD8499E5-8FB1-44FC-9B42-BB437C58AAA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AAFD9727-F97F-4CCE-8ADE-F845E5171929}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AAFD9727-F97F-4CCE-8ADE-F845E5171929}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AAFD9727-F97F-4CCE-8ADE-F845E5171929}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AAFD9727-F97F-4CCE-8ADE-F845E5171929}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AAFD9727-F97F-4CCE-8ADE-F845E5171929} = {4F76B809-8711-4AE3-81DD-B3A9C7652B80}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9618F5A6-7A3B-405C-B444-7263E6052CD0}
 	EndGlobalSection
 EndGlobal

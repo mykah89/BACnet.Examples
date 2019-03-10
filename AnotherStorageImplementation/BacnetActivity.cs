@@ -42,7 +42,7 @@ namespace AnotherStorageImplementation
 
         public static void StartActivity(DeviceObject _device)
         {
-            deviceId=_device.PROP_OBJECT_IDENTIFIER.instance;
+            deviceId=_device.PROP_OBJECT_IDENTIFIER.Instance;
             device=_device;
 
             // Bacnet on UDP/IP/Ethernet
@@ -387,7 +387,7 @@ namespace AnotherStorageImplementation
             }
 
             // some default values
-            string obj_name = object_id.type.ToString() + object_id.instance.ToString(); 
+            string obj_name = object_id.Type.ToString() + object_id.Instance.ToString(); 
             string obj_description = "Sample for you by C. Günter";
             BacnetUnitsId obj_unit = BacnetUnitsId.UNITS_NO_UNITS;
             double obj_value = 0;
@@ -416,7 +416,7 @@ namespace AnotherStorageImplementation
                 }
             }
             //add to device
-            switch (object_id.type)
+            switch (object_id.Type)
             {
                 case BacnetObjectTypes.OBJECT_ANALOG_INPUT:
                     AnalogInput<double> newAI = new AnalogInput<double>(object_id, obj_name, obj_description, obj_value, obj_unit);
@@ -443,7 +443,7 @@ namespace AnotherStorageImplementation
 
             // check if objecttype is allowed to be deleted, like for example Device switch() for adding more types which cant be deleted
             // Device not removable, no need to check
-            switch (object_id.type)
+            switch (object_id.Type)
             {
                 case BacnetObjectTypes.OBJECT_ACCESS_DOOR : // just to shows how to do
                     sender.ErrorResponse(adr, BacnetConfirmedServices.SERVICE_CONFIRMED_CREATE_OBJECT, invoke_id, BacnetErrorClasses.ERROR_CLASS_OBJECT, BacnetErrorCodes.ERROR_CODE_OBJECT_DELETION_NOT_PERMITTED);

@@ -5,8 +5,7 @@
     <ProjectGuid>{EE8E3C58-371E-4164-93DA-13D055D5BDDE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>BaCSharp</RootNamespace>
-    <TargetFramework>net40</TargetFramework>
-	<RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <TargetFrameworks>net40;netstandard2.0;</TargetFrameworks>
     <AssemblyTitle>AnotherStorageImplementation</AssemblyTitle>
     <Company>F. Chaxel</Company>
     <Product>AnotherStorageImplementation</Product>
@@ -14,19 +13,33 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <OutputPath>bin\$(Configuration)\</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BACnet" Version="1.0.8.8-alpha" />
-    <PackageReference Include="Newtonsoft.Json" Version="8.0.3" />
+    <Compile Remove="packages\**" />
+    <Compile Remove="Tests\**" />
+    <EmbeddedResource Remove="packages\**" />
+    <EmbeddedResource Remove="Tests\**" />
+    <None Remove="packages\**" />
+    <None Remove="Tests\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="PacketDotNet" Version="0.13.0" />
     <PackageReference Include="SharpPcap" Version="4.2.0" />
   </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.IO.Ports" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="PacketDotNet" Version="0.19.3" />
+    <PackageReference Include="SharpPcap" Version="4.5.0" />
+  </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
+    <ProjectReference Include="..\BACnet\BACnet.csproj" />
   </ItemGroup>
 </Project>

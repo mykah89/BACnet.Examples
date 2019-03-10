@@ -79,7 +79,7 @@ namespace BasicServer
                     foreach (BacnetObjectId o in Input)
                     {
                         // MemGPIO could be used in place of FileGPIO only on Raspberry, not Edison, Beaglebone, ...
-                        IList<BacnetValue> valtowrite = new BacnetValue[1] { new BacnetValue(Convert.ToUInt16(FileGPIO.InputPin(o.instance))) };
+                        IList<BacnetValue> valtowrite = new BacnetValue[1] { new BacnetValue(Convert.ToUInt16(FileGPIO.InputPin(o.Instance))) };
                         lock (m_storage)
                             m_storage.WriteProperty(o, BacnetPropertyIds.PROP_PRESENT_VALUE, 1, valtowrite);
                     }
@@ -94,7 +94,7 @@ namespace BasicServer
                         // Get the first ... and here the only element
                         bool val = Convert.ToBoolean(valtoread[0].Value);
                         // MemGPIO could be used in place of FileGPIO only on Raspberry, not Edison, Beaglebone, ...
-                        FileGPIO.OutputPin(o.instance, val);
+                        FileGPIO.OutputPin(o.Instance, val);
                     }
                     
                     // Refresh CPU Temp
@@ -189,7 +189,7 @@ namespace BasicServer
         static void handler_OnWritePropertyRequest(BacnetClient sender, BacnetAddress adr, byte invoke_id, BacnetObjectId object_id, BacnetPropertyValue value, BacnetMaxSegments max_segments)
         {
             // only OBJECT_BINARY_OUTPUT:x.PROP_PRESENT_VALUE could be write in this sample code
-            if ((object_id.type != BacnetObjectTypes.OBJECT_BINARY_OUTPUT) || ((BacnetPropertyIds)value.property.propertyIdentifier != BacnetPropertyIds.PROP_PRESENT_VALUE))
+            if ((object_id.Type != BacnetObjectTypes.OBJECT_BINARY_OUTPUT) || ((BacnetPropertyIds)value.property.propertyIdentifier != BacnetPropertyIds.PROP_PRESENT_VALUE))
             {
                 sender.ErrorResponse(adr, BacnetConfirmedServices.SERVICE_CONFIRMED_WRITE_PROPERTY, invoke_id, BacnetErrorClasses.ERROR_CLASS_DEVICE, BacnetErrorCodes.ERROR_CODE_WRITE_ACCESS_DENIED);
                 return;

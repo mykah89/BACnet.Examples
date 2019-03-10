@@ -48,7 +48,9 @@ namespace BasicReadWrite
         static void Main(string[] args)
         {
 
+#if NET40
             Trace.Listeners.Add(new ConsoleTraceListener());
+#endif
 
             try
             {
@@ -61,7 +63,7 @@ namespace BasicReadWrite
             }
             catch { }
 
-            Console.ReadKey();            
+            Console.ReadKey();
         }
         /*****************************************************************************************************/
         static void StartActivity()
@@ -78,8 +80,8 @@ namespace BasicReadWrite
             bacnet_client.Start();    // go
 
             // Send WhoIs in order to get back all the Iam responses :  
-            bacnet_client.OnIam += new BacnetClient.IamHandler(handler_OnIam);            
-            
+            bacnet_client.OnIam += new BacnetClient.IamHandler(handler_OnIam);
+
             bacnet_client.WhoIs();
 
             /* Optional Remote Registration as A Foreign Device on a BBMD at @192.168.1.1 on the default 0xBAC0 port
@@ -137,11 +139,12 @@ namespace BasicReadWrite
             Value = new BacnetValue(null);
 
             // Looking for the device
-            adr=DeviceAddr((uint)device_id);
+            adr = DeviceAddr((uint)device_id);
             if (adr == null) return false;  // not found
 
             // Property Read
-            if (bacnet_client.ReadPropertyRequest(adr, BacnetObjet, Propriete, out NoScalarValue)==false)
+            NoScalarValue = bacnet_client.ReadPropertyRequest(adr, BacnetObjet, Propriete);
+            if (null == NoScalarValue || !NoScalarValue.Any())
                 return false;
 
             Value = NoScalarValue[0];
@@ -159,10 +162,17 @@ namespace BasicReadWrite
 
             // Property Write
             BacnetValue[] NoScalarValue = { Value };
-            if (bacnet_client.WritePropertyRequest(adr, BacnetObjet, Propriete, NoScalarValue) == false)
-                return false;
 
-            return true;
+            try
+            {
+                bacnet_client.WritePropertyRequest(adr, BacnetObjet, Propriete, NoScalarValue);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         /*****************************************************************************************************/

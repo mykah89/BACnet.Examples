@@ -91,7 +91,7 @@ namespace BaCSharp
             get { return m_PROP_EVENT_ENABLE; }
             set 
             {
-                if (value.bits_used == 3)
+                if (value.BitsUsed == 3)
                     m_PROP_EVENT_ENABLE = value; 
             }
         }
@@ -103,7 +103,7 @@ namespace BaCSharp
             get { return m_PROP_ACKED_TRANSITIONS; }
             set 
             { 
-                if (value.bits_used==3)
+                if (value.BitsUsed==3)
                     m_PROP_ACKED_TRANSITIONS = value; 
             }
         }
@@ -160,7 +160,7 @@ namespace BaCSharp
         {
             if (Mydevice == null) return;
 
-            if (m_PROP_LIMIT_ENABLE.value[0] == 0)
+            if (m_PROP_LIMIT_ENABLE.Value[0] == 0)
             {
                 Last_PRESENT_VALUE = m_PROP_PRESENT_VALUE;
                 return;
@@ -172,11 +172,11 @@ namespace BaCSharp
             double ll = Convert.ToDouble(m_PROP_LOW_LIMIT);
             double db = Convert.ToDouble(m_PROP_DEADBAND);
 
-            bool LimitEnabledHigh = (m_PROP_LIMIT_ENABLE.value[0] & (uint)BacnetLimitEnable.EVENT_HIGH_LIMIT_ENABLE) != 0;
-            bool LimitEnabledLow = (m_PROP_LIMIT_ENABLE.value[0] & (uint)BacnetLimitEnable.EVENT_LOW_LIMIT_ENABLE) != 0;
+            bool LimitEnabledHigh = (m_PROP_LIMIT_ENABLE.Value[0] & (uint)BacnetLimitEnable.EVENT_HIGH_LIMIT_ENABLE) != 0;
+            bool LimitEnabledLow = (m_PROP_LIMIT_ENABLE.Value[0] & (uint)BacnetLimitEnable.EVENT_LOW_LIMIT_ENABLE) != 0;
 
-            bool EventToOffNormal = (m_PROP_EVENT_ENABLE.value[0] & (uint)BacnetEventEnable.EVENT_ENABLE_TO_OFFNORMAL) != 0;
-            bool EventToNormal = (m_PROP_EVENT_ENABLE.value[0] & (uint)BacnetEventEnable.EVENT_ENABLE_TO_NORMAL) != 0;
+            bool EventToOffNormal = (m_PROP_EVENT_ENABLE.Value[0] & (uint)BacnetEventEnable.EVENT_ENABLE_TO_OFFNORMAL) != 0;
+            bool EventToNormal = (m_PROP_EVENT_ENABLE.Value[0] & (uint)BacnetEventEnable.EVENT_ENABLE_TO_NORMAL) != 0;
 
             bool NotifyState = false;
 

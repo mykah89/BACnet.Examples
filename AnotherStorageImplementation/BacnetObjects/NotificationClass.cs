@@ -29,6 +29,7 @@ using System.Linq;
 using System.Text;
 using System.IO.BACnet;
 using System.IO.BACnet.Serialize;
+using System.IO.BACnet.EventNotification;
 
 namespace BaCSharp
 {
@@ -38,7 +39,7 @@ namespace BaCSharp
         [BaCSharpType(BacnetApplicationTags.BACNET_APPLICATION_TAG_UNSIGNED_INT)]
         public virtual uint PROP_NOTIFICATION_CLASS
         {
-            get { return m_PROP_OBJECT_IDENTIFIER.instance; }
+            get { return m_PROP_OBJECT_IDENTIFIER.Instance; }
         }
 
         protected IList<BacnetValue> m_PROP_PRIORITY = new BacnetValue[3];
@@ -126,23 +127,23 @@ namespace BaCSharp
             if ((m_PROP_RECIPIENT_LIST == null) || (m_PROP_RECIPIENT_LIST.Count == 0))
                 return;
 
-            BacnetEventNotificationData bacnetEvent = new BacnetEventNotificationData();
+            StateTransition bacnetEvent = new StateTransition();
 
             // The struct is the same of all recipients, except one attribut
-            bacnetEvent.notificationClass = m_PROP_OBJECT_IDENTIFIER.instance;
-            bacnetEvent.initiatingObjectIdentifier = Device;
-            bacnetEvent.eventObjectIdentifier = SenderObject;
-            bacnetEvent.toState = tostate;
-            bacnetEvent.fromState = fromstate;
-            bacnetEvent.notifyType = notifyType;
-            bacnetEvent.eventType = evenType;
+            bacnetEvent.NotificationClass = m_PROP_OBJECT_IDENTIFIER.Instance;
+            bacnetEvent.InitiatingObjectIdentifier = Device;
+            bacnetEvent.EventObjectIdentifier = SenderObject;
+            bacnetEvent.ToState = tostate;
+            bacnetEvent.FromState = fromstate;
+            bacnetEvent.NotifyType = notifyType;
+            bacnetEvent.EventType = evenType;
 
             BacnetGenericTime timeStamp = new BacnetGenericTime();
             timeStamp.Tag = BacnetTimestampTags.TIME_STAMP_DATETIME;
             timeStamp.Time = DateTime.Now;
 
-            bacnetEvent.timeStamp = timeStamp;
-            bacnetEvent.priority = 127;
+            bacnetEvent.TimeStamp = timeStamp;
+            bacnetEvent.Priority = 127;
 
             for (int i = 0; i < m_PROP_RECIPIENT_LIST.Count; i++)
             {
@@ -162,15 +163,15 @@ namespace BaCSharp
                 if (DayOfWeek == 0) DayOfWeek = 7;  // Put Sunday at the end of the enumaration
                 DayOfWeek = DayOfWeek - 1;          // start at 0
 
-                if ((devReportEntry.WeekofDay.value[0] & (1 << DayOfWeek)) == 0)
+                if ((devReportEntry.WeekofDay.Value[0] & (1 << DayOfWeek)) == 0)
                     DoASend = false;
 
                 // new State is OK ?
-                if ((tostate == BacnetEventStates.EVENT_STATE_OFFNORMAL) && ((devReportEntry.evenType.value[0] & 1) != 1))
+                if ((tostate == BacnetEventStates.EVENT_STATE_OFFNORMAL) && ((devReportEntry.evenType.Value[0] & 1) != 1))
                     DoASend = false;
-                if ((tostate == BacnetEventStates.EVENT_STATE_NORMAL) && ((devReportEntry.evenType.value[0] & 2) != 2))
+                if ((tostate == BacnetEventStates.EVENT_STATE_NORMAL) && ((devReportEntry.evenType.Value[0] & 2) != 2))
                     DoASend = false;
-                if ((tostate == BacnetEventStates.EVENT_STATE_FAULT) && ((devReportEntry.evenType.value[0] & 4) != 4))
+                if ((tostate == BacnetEventStates.EVENT_STATE_FAULT) && ((devReportEntry.evenType.Value[0] & 4) != 4))
                     DoASend = false;
 
                 // Find the receiver endPoint
@@ -185,7 +186,7 @@ namespace BaCSharp
                 else
                     try
                     {
-                        recipient = Mydevice.SuroundingDevices[devReportEntry.Id.instance];
+                        recipient = Mydevice.SuroundingDevices[devReportEntry.Id.Instance];
                     }
                     catch { }
 
@@ -201,7 +202,7 @@ namespace BaCSharp
                     {
                         lock (bacnetEventlock)
                         {
-                            bacnetEvent.processIdentifier = processIdentifier;
+                            bacnetEvent.ProcessIdentifier = processIdentifier;
                             recipient.Value.Key.SendUnconfirmedEventNotification(recipient.Value.Value, bacnetEvent);
                         }
 

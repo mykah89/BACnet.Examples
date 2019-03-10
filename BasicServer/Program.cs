@@ -48,7 +48,9 @@ namespace BasicServer
         static void Main(string[] args)
         {
 
+#if NET40
             Trace.Listeners.Add(new ConsoleTraceListener());
+#endif
 
             try
             {
@@ -121,7 +123,7 @@ namespace BasicServer
         static void handler_OnWritePropertyRequest(BacnetClient sender, BacnetAddress adr, byte invoke_id, BacnetObjectId object_id, BacnetPropertyValue value, BacnetMaxSegments max_segments)
         {
             // only OBJECT_ANALOG_VALUE:0.PROP_PRESENT_VALUE could be write in this sample code
-            if ((object_id.type != BacnetObjectTypes.OBJECT_ANALOG_VALUE) || (object_id.instance != 0) || ((BacnetPropertyIds)value.property.propertyIdentifier != BacnetPropertyIds.PROP_PRESENT_VALUE))
+            if ((object_id.Type != BacnetObjectTypes.OBJECT_ANALOG_VALUE) || (object_id.Instance != 0) || ((BacnetPropertyIds)value.property.propertyIdentifier != BacnetPropertyIds.PROP_PRESENT_VALUE))
             {
                 sender.ErrorResponse(adr, BacnetConfirmedServices.SERVICE_CONFIRMED_WRITE_PROPERTY, invoke_id, BacnetErrorClasses.ERROR_CLASS_DEVICE, BacnetErrorCodes.ERROR_CODE_WRITE_ACCESS_DENIED);
                 return;

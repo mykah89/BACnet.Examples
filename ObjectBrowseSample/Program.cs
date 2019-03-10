@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO.BACnet;
 
 namespace ObjectBrowseSample
@@ -24,7 +25,7 @@ namespace ObjectBrowseSample
             // This property is a list of all bacnet objects (ids) of that device
 
             var deviceObjId = new BacnetObjectId(BacnetObjectTypes.OBJECT_DEVICE, deviceid);
-            var objectIdList = await sender.ReadPropertyAsync(adr, deviceObjId, BacnetPropertyIds.PROP_OBJECT_LIST);
+            IList<BacnetValue> objectIdList = await sender.ReadPropertyAsync(adr, deviceObjId, BacnetPropertyIds.PROP_OBJECT_LIST);
 
             foreach (var objId in objectIdList)
                 Console.WriteLine($"{objId}");

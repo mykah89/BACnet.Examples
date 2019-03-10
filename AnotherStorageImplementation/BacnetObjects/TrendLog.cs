@@ -140,9 +140,9 @@ namespace BaCSharp
                 TrendBuffer = new BacnetLogRecord[m_PROP_BUFFER_SIZE];
 
             if (ValueType!=null)
-                TrendBuffer[LogPtr] = new BacnetLogRecord((BacnetTrendLogValueType)ValueType, Value, TimeStamp, Status);
+                TrendBuffer[LogPtr] = new BacnetLogRecord((BacnetTrendLogValueType)ValueType, Value, TimeStamp, (BacnetStatusFlags)Status);
             else
-                TrendBuffer[LogPtr] = new BacnetLogRecord(DefaultValueType, Value, TimeStamp, Status);
+                TrendBuffer[LogPtr] = new BacnetLogRecord(DefaultValueType, Value, TimeStamp, (BacnetStatusFlags)Status);
 
             LogPtr = (LogPtr + 1) % TrendBuffer.Length;   // circular buffer
             if (m_PROP_RECORD_COUNT < TrendBuffer.Length)

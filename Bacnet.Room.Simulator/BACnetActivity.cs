@@ -136,7 +136,7 @@ namespace DemoServer
             status = DeviceStorage.ErrorCodes.Good;
 
 
-            if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && property_id == BacnetPropertyIds.PROP_OBJECT_LIST)
+            if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && property_id == BacnetPropertyIds.PROP_OBJECT_LIST)
             {
                 if (array_index == 0)
                 {
@@ -160,7 +160,7 @@ namespace DemoServer
                     value = list;
                 }
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED)
             {
                 BacnetValue v = new BacnetValue();
                 v.Tag = BacnetApplicationTags.BACNET_APPLICATION_TAG_BIT_STRING;
@@ -175,7 +175,7 @@ namespace DemoServer
                 v.Value = b;
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_PROTOCOL_SERVICES_SUPPORTED)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_PROTOCOL_SERVICES_SUPPORTED)
             {
                 BacnetValue v = new BacnetValue();
                 v.Tag = BacnetApplicationTags.BACNET_APPLICATION_TAG_BIT_STRING;
@@ -198,21 +198,21 @@ namespace DemoServer
                 v.Value = b;
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_SEGMENTATION_SUPPORTED)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_SEGMENTATION_SUPPORTED)
             {
                 BacnetValue v = new BacnetValue();
                 v.Tag = BacnetApplicationTags.BACNET_APPLICATION_TAG_ENUMERATED;
                 v.Value = (uint)BacnetSegmentations.SEGMENTATION_BOTH;
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_SYSTEM_STATUS)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_SYSTEM_STATUS)
             {
                 BacnetValue v = new BacnetValue();
                 v.Tag = BacnetApplicationTags.BACNET_APPLICATION_TAG_ENUMERATED;
                 v.Value = (uint)BacnetDeviceStatus.OPERATIONAL;      //can we be in any other mode I wonder?
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_DEVICE && object_id.instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_ACTIVE_COV_SUBSCRIPTIONS)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_DEVICE && object_id.Instance == m_storage.DeviceId && property_id == BacnetPropertyIds.PROP_ACTIVE_COV_SUBSCRIPTIONS)
             {
                 List<BacnetValue> list = new List<BacnetValue>();
                 foreach (KeyValuePair<BacnetObjectId, List<Subscription>> entry in m_subscriptions)
@@ -240,7 +240,7 @@ namespace DemoServer
                 }
                 value = list;
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_OCTETSTRING_VALUE && object_id.instance == 0 && property_id == BacnetPropertyIds.PROP_PRESENT_VALUE)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_OCTETSTRING_VALUE && object_id.Instance == 0 && property_id == BacnetPropertyIds.PROP_PRESENT_VALUE)
             {
                 //this is our huge blob
                 BacnetValue v = new BacnetValue();
@@ -251,7 +251,7 @@ namespace DemoServer
                 v.Value = blob;
                 value = new BacnetValue[] { v };
             }
-            else if (object_id.type == BacnetObjectTypes.OBJECT_GROUP && property_id == BacnetPropertyIds.PROP_PRESENT_VALUE)
+            else if (object_id.Type == BacnetObjectTypes.OBJECT_GROUP && property_id == BacnetPropertyIds.PROP_PRESENT_VALUE)
             {
                 //get property list
                 IList<BacnetValue> properties;

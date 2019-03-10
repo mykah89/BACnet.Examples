@@ -223,7 +223,7 @@ namespace BaCSharp
             newObj.deviceOwner=this;
 
             // Update OBJECT_TYPES_SUPPORTED
-            m_PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED.SetBit((byte)newObj.PROP_OBJECT_IDENTIFIER.type, true);
+            m_PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED.SetBit((byte)newObj.PROP_OBJECT_IDENTIFIER.Type, true);
             // Update OBJECT_LIST
             m_PROP_OBJECT_LIST.Add(new BacnetValue(BacnetApplicationTags.BACNET_APPLICATION_TAG_OBJECT_ID, newObj.PROP_OBJECT_IDENTIFIER));
             
