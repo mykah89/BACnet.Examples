@@ -52,8 +52,8 @@ namespace BasicServer
             Trace.Listeners.Add(new ConsoleTraceListener());
 #endif
 
-            try
-            {
+            //try
+            //{
                 StartActivity();
                 Console.WriteLine("Started");
 
@@ -82,8 +82,8 @@ namespace BasicServer
                     Thread.Sleep(1000);
                     count += 0.1;
                 }
-            }
-            catch { }
+            //}
+            //catch { }
         }
 
         /*****************************************************************************************************/
@@ -94,7 +94,7 @@ namespace BasicServer
             m_storage = DeviceStorage.Load("BasicServer.DeviceDescriptor.xml");
 
             // Bacnet on UDP/IP/Ethernet
-            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, false));
+            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, true));
             // or Bacnet Mstp on COM4 à 38400 bps, own master id 8
             // m_bacnet_client = new BacnetClient(new BacnetMstpProtocolTransport("COM4", 38400, 8);
             // Or Bacnet Ethernet
