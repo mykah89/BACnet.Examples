@@ -4,7 +4,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <ProjectGuid>{DB89E653-7DBF-45BC-A92E-3754D8091E89}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net40;netstandard2.0;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net40;netstandard2.0;netcoreapp2.0;netcoreapp2.1;netcoreapp2.2;netcoreapp3.0</TargetFrameworks>
     <WarningsAsErrors></WarningsAsErrors>
     <AssemblyTitle>BasicServer</AssemblyTitle>
     <Company>Microsoft</Company>
@@ -32,10 +32,10 @@
     <PackageReference Include="PacketDotNet" Version="0.13.0" />
     <PackageReference Include="SharpPcap" Version="4.2.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp2.0' or '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp2.2' or '$(TargetFramework)' == 'netcoreapp3.0'">
     <PackageReference Include="System.IO.Ports" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp2.0'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'netstandard2.0' or '$(TargetFramework)' == 'netcoreapp2.0' or '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp2.2' or '$(TargetFramework)' == 'netcoreapp3.0'">
     <PackageReference Include="PacketDotNet" Version="0.19.3" />
     <PackageReference Include="SharpPcap" Version="4.5.0" />
   </ItemGroup>
