@@ -32,6 +32,7 @@ using System.IO.BACnet;
 using System.Threading;
 using System.IO.BACnet.Storage;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace BasicServer
 {
@@ -41,113 +42,53 @@ namespace BasicServer
     //
     class Program
     {
-
-        // Define a simple method to write details about the current executing 
-        // environment to the trace listener collection.
-        public static void WriteEnvironmentInfoToTrace()
-        {
-            string methodName = "WriteEnvironmentInfoToTrace";
-
-            Trace.Indent();
-            Trace.WriteLine(DateTime.Now.ToString() + " - Start of " + methodName);
-            Trace.Indent();
-
-            // Write details on the executing environment to the trace output.
-            Trace.WriteLine("Operating system: " + System.Environment.OSVersion.ToString());
-            Trace.WriteLine("Computer name: " + System.Environment.MachineName);
-            Trace.WriteLine("User name: " + System.Environment.UserName);
-            Trace.WriteLine("CLR runtime version: " + System.Environment.Version.ToString());
-            Trace.WriteLine("Command line: " + System.Environment.CommandLine);
-
-            // Enumerate the trace listener collection and 
-            // display details about each configured trace listener.
-            Trace.WriteLine("Number of configured trace listeners = " + Trace.Listeners.Count.ToString());
-
-            foreach (TraceListener tl in Trace.Listeners)
-            {
-                Trace.WriteLine("Trace listener name = " + tl.Name);
-                Trace.WriteLine("               type = " + tl.GetType().ToString());
-            }
-
-            Trace.Unindent();
-            Trace.WriteLine(DateTime.Now.ToString() + " - End of " + methodName);
-            Trace.Unindent();
-
-        }
-
         static BacnetClient bacnet_client;
+        private static ILogger logger;
         static DeviceStorage m_storage;
 
         /*****************************************************************************************************/
         static void Main(string[] args)
         {
+
+            using (var loggerFactory = LoggerFactory.Create(builder => builder.AddConsole()))
+            {
+                logger = loggerFactory.CreateLogger<Program>();
+                logger.IsEnabled(LogLevel.Debug);
+                logger.LogInformation("Starting");
+
 #if NET40
-            Trace.Listeners.Add(new ConsoleTraceListener());
+                Trace.Listeners.Add(new ConsoleTraceListener());
 #endif
 #if NETCOREAPP3_0
-        //https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.consoletracelistener?view=netframework-4.7.2&viewFallbackFrom=netcore-2.2
-        //https://github.com/dotnet/corefx/issues/24829
-        //https://docs.microsoft.com/en-us/dotnet/api/system.diagnostics.trace.listeners?view=netcore-2.2
-        // Define a trace listener to direct trace output from this method
-        // to the console.
-        ConsoleTraceListener consoleTracer;
-
-        // Check the command line arguments to determine which
-        // console stream should be used for trace output.
-        if ((args.Length>0)&&(args[0].ToString().ToLower().Equals("/stderr")))
-            // Initialize the console trace listener to write
-            // trace output to the standard error stream.
-        {
-            consoleTracer = new ConsoleTraceListener(true);
-        }
-        else
-        {
-            // Initialize the console trace listener to write
-            // trace output to the standard output stream.
-            consoleTracer = new ConsoleTraceListener();
-        }
-        // Set the name of the trace listener, which helps identify this 
-        // particular instance within the trace listener collection.
-        consoleTracer.Name = "mainConsoleTracer";
-
-        // Write the initial trace message to the console trace listener.
-        consoleTracer.WriteLine(DateTime.Now.ToString()+" ["+consoleTracer.Name+"] - Starting output to trace listener.");
-
-        // Add the new console trace listener to 
-        // the collection of trace listeners.
-        Trace.Listeners.Add(consoleTracer);
-
-        // Call a local method, which writes information about the current 
-        // execution environment to the configured trace listeners.
-        WriteEnvironmentInfoToTrace();
 #endif
-            StartActivity();
-            Console.WriteLine("Started");
+                StartActivity();
+                logger.LogInformation("Started");
 
-            BacnetObjectId OBJECT_ANALOG_VALUE_0 = new BacnetObjectId(BacnetObjectTypes.OBJECT_ANALOG_VALUE, 0);
-            BacnetObjectId OBJECT_ANALOG_INPUT_0 = new BacnetObjectId(BacnetObjectTypes.OBJECT_ANALOG_INPUT, 0);
+                BacnetObjectId OBJECT_ANALOG_VALUE_0 = new BacnetObjectId(BacnetObjectTypes.OBJECT_ANALOG_VALUE, 0);
+                BacnetObjectId OBJECT_ANALOG_INPUT_0 = new BacnetObjectId(BacnetObjectTypes.OBJECT_ANALOG_INPUT, 0);
 
-            double count = 0;
+                double count = 0;
 
-            for (; ; )
-            {
-                lock (m_storage)         // read and write callback are fired in a separated thread, so multiple access needs protection
+                for (; ; )
                 {
-                    // Read the Present Value
-                    IList<BacnetValue> valtoread;
-                    // index 0 : number of values in the array
-                    // index 1 : first value
-                    m_storage.ReadProperty(OBJECT_ANALOG_VALUE_0, BacnetPropertyIds.PROP_PRESENT_VALUE, 1, out valtoread);
-                    // Get the first ... and here the only element
-                    double coef = Convert.ToDouble(valtoread[0].Value);
+                    lock (m_storage)         // read and write callback are fired in a separated thread, so multiple access needs protection
+                    {
+                        // Read the Present Value
+                        IList<BacnetValue> valtoread;
+                        // index 0 : number of values in the array
+                        // index 1 : first value
+                        m_storage.ReadProperty(OBJECT_ANALOG_VALUE_0, BacnetPropertyIds.PROP_PRESENT_VALUE, 1, out valtoread);
+                        // Get the first ... and here the only element
+                        double coef = Convert.ToDouble(valtoread[0].Value);
 
-                    float sin = (float)(coef * Math.Sin(count));
-                    // Write the Present Value
-                    IList<BacnetValue> valtowrite = new BacnetValue[1] { new BacnetValue(sin) };
-                    m_storage.WriteProperty(OBJECT_ANALOG_INPUT_0, BacnetPropertyIds.PROP_PRESENT_VALUE, 1, valtowrite, true);
+                        float sin = (float)(coef * Math.Sin(count));
+                        // Write the Present Value
+                        IList<BacnetValue> valtowrite = new BacnetValue[1] { new BacnetValue(sin) };
+                        m_storage.WriteProperty(OBJECT_ANALOG_INPUT_0, BacnetPropertyIds.PROP_PRESENT_VALUE, 1, valtowrite, true);
+                    }
+                    Thread.Sleep(1000);
+                    count += 0.1;
                 }
-                Thread.Sleep(1000);
-                count += 0.1;
             }
         }
 
