@@ -5,7 +5,7 @@
     <ProjectGuid>{EE8E3C58-371E-4164-93DA-13D055D5BDDE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>BaCSharp</RootNamespace>
-    <TargetFrameworks>net40;netstandard2.0;</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <AssemblyTitle>AnotherStorageImplementation</AssemblyTitle>
     <Company>F. Chaxel</Company>
     <Product>AnotherStorageImplementation</Product>

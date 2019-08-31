@@ -4,7 +4,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <ProjectGuid>{AB80ADFC-41DD-4E98-87CB-89C358B9E65D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFrameworks>net40</TargetFrameworks>	
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <AssemblyTitle>BacnetToDatabase</AssemblyTitle>
     <Product>BacnetToDatabase</Product>
     <Copyright>Copyright ©  2015</Copyright>
@@ -18,7 +18,6 @@
     <DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="BACnet" Version="1.0.8.8-alpha" />
     <PackageReference Include="EntityFramework" Version="6.2.0" />
     <PackageReference Include="EntityFramework.SqlServerCompact" Version="6.2.0" />
     <PackageReference Include="PacketDotNet" Version="0.13.0" />

@@ -4,7 +4,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <ProjectGuid>{28F7604F-7DCD-4330-8261-55AEB2B0BAC4}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net40;netstandard2.0;</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <AssemblyTitle>BasicReadWrite</AssemblyTitle>
     <Company>Microsoft</Company>
     <Product>BasicReadWrite</Product>

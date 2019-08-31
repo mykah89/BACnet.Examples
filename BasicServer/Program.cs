@@ -50,6 +50,8 @@ namespace BasicServer
         }
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+            .UseSystemd()
+            .UseWindowsService()
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddHostedService<Worker>();

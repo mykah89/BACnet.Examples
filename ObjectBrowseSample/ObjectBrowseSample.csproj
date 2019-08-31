@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{CD8499E5-8FB1-44FC-9B42-BB437C58AAA2}</ProjectGuid>
-    <TargetFrameworks>net462;netstandard2.0;</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <AssemblyTitle>ObjectBrowseSample</AssemblyTitle>
     <Product>ObjectBrowseSample</Product>
     <Copyright>Copyright ©  2016</Copyright>
