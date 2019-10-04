@@ -22,8 +22,10 @@ namespace BasicServer
             _logger = logger;
         }
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            _logger.LogInformation("Worker has started.");
+
             while (!stoppingToken.IsCancellationRequested)
             {
                 startActivity();
@@ -51,15 +53,13 @@ namespace BasicServer
                         IList<BacnetValue> valtowrite = new BacnetValue[1] { new BacnetValue(sin) };
                         m_storage.WriteProperty(OBJECT_ANALOG_INPUT_0, BacnetPropertyIds.PROP_PRESENT_VALUE, 1, valtowrite, true);
                     }
-                    Thread.Sleep(1000);
+                    await Task.Delay(1000, stoppingToken);
                     count += 0.1;
                 }
 
                 //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 //await Task.Delay(1000, stoppingToken);
             }
-
-            return Task.CompletedTask;
         }
 
         private void startActivity()
@@ -69,12 +69,7 @@ namespace BasicServer
             m_storage = DeviceStorage.Load("BasicServer.DeviceDescriptor.xml");
 
             // Bacnet on UDP/IP/Ethernet
-#if NET40
-            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, false));
-#endif
-#if NETCOREAPP
             bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, true));
-#endif
 
             // or Bacnet Mstp on COM4 à 38400 bps, own master id 8
             // m_bacnet_client = new BacnetClient(new BacnetMstpProtocolTransport("COM4", 38400, 8);
@@ -136,7 +131,8 @@ namespace BasicServer
         {
             lock (m_storage)
             {
-                _logger.LogDebug($"Read property request from {adr.net}.");
+                _logger.LogInformation($"Read property request for {property.ToString()} of {object_id.ToString()} from {adr.ToString()}.");
+
                 try
                 {
                     IList<BacnetValue> value;

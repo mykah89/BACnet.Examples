@@ -1,0 +1,9 @@
+﻿[Unit]
+Description=BasicServer
+
+[Service]
+Type=notify
+ExecStart=/home/ubuntu-user/BacnetServer2/BasicServer
+
+[Install]
+WantedBy=multi-user.target
