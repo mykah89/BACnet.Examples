@@ -1,41 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <ProjectGuid>{47FC9B60-CC4A-479C-8267-DCEEE53067AC}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>RasberrySample</RootNamespace>
-    <AssemblyName>RasberrySample</AssemblyName>
-    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
-    <AssemblyTitle>RaspberrySample</AssemblyTitle>
-    <Product>RasberrySample</Product>
-    <Copyright>Copyright ©2015</Copyright>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="packages\**" />
-    <Compile Remove="Tests\**" />
-    <EmbeddedResource Remove="packages\**" />
-    <EmbeddedResource Remove="Tests\**" />
-    <None Remove="packages\**" />
-    <None Remove="Tests\**" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="PacketDotNet" Version="0.13.0" />
-    <PackageReference Include="SharpPcap" Version="4.2.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.IO.Ports" Version="4.5.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="PacketDotNet" Version="0.19.3" />
-    <PackageReference Include="SharpPcap" Version="4.5.0" />
-  </ItemGroup>
   <ItemGroup>
     <None Include="DeviceDescriptor.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -48,5 +14,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BACnet\BACnet.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
 </Project>

@@ -1,38 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <ProjectGuid>{C501E026-4977-49C6-8DCB-5B9600C17FF1}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
-    <AssemblyTitle>BasicAdviseCOV</AssemblyTitle>
-    <Company>Microsoft</Company>
-    <Product>BasicAdviseCOV</Product>
-    <Copyright>Copyright © Microsoft 2015</Copyright>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="packages\**" />
-    <Compile Remove="Tests\**" />
-    <EmbeddedResource Remove="packages\**" />
-    <EmbeddedResource Remove="Tests\**" />
-    <None Remove="packages\**" />
-    <None Remove="Tests\**" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
-    <PackageReference Include="PacketDotNet" Version="0.13.0" />
-    <PackageReference Include="SharpPcap" Version="4.2.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="System.IO.Ports" Version="4.5.0" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="PacketDotNet" Version="0.19.3" />
-    <PackageReference Include="SharpPcap" Version="4.5.0" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0" />
