@@ -16,10 +16,12 @@ namespace BasicServer
         private DeviceStorage m_storage;
 
         private readonly ILogger<Worker> _logger;
+        private readonly ILoggerFactory _loggerFactory;
 
-        public Worker(ILogger<Worker> logger)
+        public Worker(ILogger<Worker> logger, ILoggerFactory loggerFactory)
         {
             _logger = logger;
+            _loggerFactory = loggerFactory;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -68,18 +70,8 @@ namespace BasicServer
             // Get myId as own device id
             m_storage = DeviceStorage.Load("BasicServer.DeviceDescriptor.xml");
 
-            using (var loggerFactory = LoggerFactory.Create(b =>
-            {
-                b.AddConsole(c =>
-                {
-                    c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
-                });
-            }))
-            {
-                // Bacnet on UDP/IP/Ethernet
-                bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(port: 0xBAC0, loggerFactory: loggerFactory, useExclusivePort: false), loggerFactory: loggerFactory);
-            }
-
+            // Bacnet on UDP/IP/Ethernet
+            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(port: 0xBAC0, loggerFactory: _loggerFactory, useExclusivePort: false), loggerFactory: _loggerFactory);
             // or Bacnet Mstp on COM4 à 38400 bps, own master id 8
             // m_bacnet_client = new BacnetClient(new BacnetMstpProtocolTransport("COM4", 38400, 8);
             // Or Bacnet Ethernet
