@@ -32,6 +32,7 @@ using System.IO.BACnet;
 using System.Threading;
 using System.IO.BACnet.Storage;
 using System.IO.BACnet.EventNotification;
+using Microsoft.Extensions.Logging;
 
 namespace BasicAlarmListener
 {
@@ -69,8 +70,11 @@ namespace BasicAlarmListener
             Property Prop = Array.Find<Property>(m_storage.Objects[0].Properties, p => p.Id == BacnetPropertyIds.PROP_OBJECT_LIST);
             Prop.Value[0] = "OBJECT_DEVICE:" + myId.ToString();
 
-            // Bacnet on UDP/IP/Ethernet
-            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, false));
+            using (var loggerFactory = new LoggerFactory())
+            {
+                // Bacnet on UDP/IP/Ethernet
+                bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, loggerFactory: loggerFactory), loggerFactory: loggerFactory);
+            }
             // or Bacnet Mstp on COM4 à 38400 bps, own master id 8
             // m_bacnet_client = new BacnetClient(new BacnetMstpProtocolTransport("COM4", 38400, 8);
 

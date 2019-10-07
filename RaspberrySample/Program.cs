@@ -33,6 +33,7 @@ using System.IO.BACnet.Storage;
 using System.Diagnostics;
 using GPIO;
 using System.IO;
+using Microsoft.Extensions.Logging;
 
 namespace BasicServer
 {
@@ -148,9 +149,18 @@ namespace BasicServer
 
             RaspberryGpioConfig();
 
-            // Bacnet on UDP/IP/Ethernet
-            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, false));
-            
+            using (var loggerFactory = LoggerFactory.Create(b =>
+            {
+                b.AddConsole(c =>
+                {
+                    c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+                });
+            }))
+            {
+                // Bacnet on UDP/IP/Ethernet
+                bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(port: 0xBAC0, loggerFactory: loggerFactory, useExclusivePort: false), loggerFactory: loggerFactory);
+            }
+
             // Bacnet Mstp using an Usb to Rs485 adapter :
             //      bacnet_client = new BacnetClient(new BacnetMstpProtocolTransport("/dev/ttyUSB0", 38400,4,10)); 
             // Master id 4, Max master 10, usb adapter attached on ttyUSB0

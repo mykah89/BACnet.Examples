@@ -4,7 +4,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <ProjectGuid>{28F7604F-7DCD-4330-8261-55AEB2B0BAC4}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net40;netstandard2.0;</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <AssemblyTitle>BasicReadWrite</AssemblyTitle>
     <Company>Microsoft</Company>
     <Product>BasicReadWrite</Product>
@@ -23,10 +23,6 @@
     <None Remove="packages\**" />
     <None Remove="Tests\**" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Common.Logging" Version="3.4.1" />
-    <PackageReference Include="Common.Logging.Core" Version="3.4.1" />
-  </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net40'">
     <PackageReference Include="PacketDotNet" Version="0.13.0" />
     <PackageReference Include="SharpPcap" Version="4.2.0" />
@@ -37,6 +33,10 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="PacketDotNet" Version="0.19.3" />
     <PackageReference Include="SharpPcap" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BACnet\BACnet.csproj" />

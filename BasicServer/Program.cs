@@ -32,6 +32,7 @@ using System.IO.BACnet;
 using System.Threading;
 using System.IO.BACnet.Storage;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
 
 namespace BasicServer
 {
@@ -47,11 +48,6 @@ namespace BasicServer
         /*****************************************************************************************************/
         static void Main(string[] args)
         {
-
-#if NET40
-            Trace.Listeners.Add(new ConsoleTraceListener());
-#endif
-
             try
             {
                 StartActivity();
@@ -60,7 +56,7 @@ namespace BasicServer
                 BacnetObjectId OBJECT_ANALOG_VALUE_0 = new BacnetObjectId(BacnetObjectTypes.OBJECT_ANALOG_VALUE, 0);
                 BacnetObjectId OBJECT_ANALOG_INPUT_0 = new BacnetObjectId(BacnetObjectTypes.OBJECT_ANALOG_INPUT, 0);
 
-                double count=0;
+                double count = 0;
 
                 for (; ; )
                 {
@@ -93,8 +89,19 @@ namespace BasicServer
             // Get myId as own device id
             m_storage = DeviceStorage.Load("BasicServer.DeviceDescriptor.xml");
 
-            // Bacnet on UDP/IP/Ethernet
-            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, false));
+            using (var loggerFactory = LoggerFactory.Create(b =>
+            {
+                b.AddConsole(c =>
+                {
+                    c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+                });
+            }))
+            {
+                // Bacnet on UDP/IP/Ethernet
+                bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(port: 0xBAC0, loggerFactory: loggerFactory, useExclusivePort: false), loggerFactory: loggerFactory);
+            }
+
+
             // or Bacnet Mstp on COM4 à 38400 bps, own master id 8
             // m_bacnet_client = new BacnetClient(new BacnetMstpProtocolTransport("COM4", 38400, 8);
             // Or Bacnet Ethernet
@@ -118,7 +125,7 @@ namespace BasicServer
         {
             //ignore Iams from other devices. (Also loopbacks)
         }
-        
+
         /*****************************************************************************************************/
         static void handler_OnWritePropertyRequest(BacnetClient sender, BacnetAddress adr, byte invoke_id, BacnetObjectId object_id, BacnetPropertyValue value, BacnetMaxSegments max_segments)
         {

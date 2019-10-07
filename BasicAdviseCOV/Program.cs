@@ -30,6 +30,7 @@ using System.Linq;
 using System.Text;
 using System.IO.BACnet;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace BasicAdviseCOV
 {
@@ -111,8 +112,18 @@ namespace BasicAdviseCOV
         /*****************************************************************************************************/
         static void StartActivity()
         {
-            // Bacnet on UDP/IP/Ethernet
-            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, false));
+            using (var loggerFactory = LoggerFactory.Create(b =>
+            {
+                b.AddConsole(c =>
+                {
+                    c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+                });
+            }))
+            {
+                // Bacnet on UDP/IP/Ethernet
+                bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, loggerFactory: loggerFactory), loggerFactory: loggerFactory);
+            }
+
             // or Bacnet Mstp on COM4 à 38400 bps, own master id 8
             // m_bacnet_client = new BacnetClient(new BacnetMstpProtocolTransport("COM4", 38400, 8);
 
