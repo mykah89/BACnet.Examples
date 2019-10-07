@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO.BACnet;
 using System.IO.BACnet.Storage;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace BasicServer
 {
@@ -17,11 +20,13 @@ namespace BasicServer
 
         private readonly ILogger<Worker> _logger;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly IOptions<BasicServerConfig> _serverConfig;
 
-        public Worker(ILogger<Worker> logger, ILoggerFactory loggerFactory)
+        public Worker(ILogger<Worker> logger, IOptions<BasicServerConfig> serverConfig, ILoggerFactory loggerFactory)
         {
             _logger = logger;
             _loggerFactory = loggerFactory;
+            _serverConfig = serverConfig;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -64,14 +69,55 @@ namespace BasicServer
             }
         }
 
+        private string getIpAddress()
+        {
+            string result = _serverConfig.Value?.LocalIpEndpoint;
+
+            if (!string.IsNullOrWhiteSpace(result))
+            {
+                NetworkInterface validInterface = NetworkInterface.GetAllNetworkInterfaces()
+                    .FirstOrDefault(x => x.GetIPProperties().UnicastAddresses.FirstOrDefault(a => a.Address.ToString() == result) != null);
+
+                if (validInterface == null)
+                {
+                    throw new Exception($"Failed to locate a network interface with the specified ip addres ${result}");
+                }
+                else
+                {
+                    return result;
+                }
+            }
+            else
+            {
+                string[] ips = NetworkInterface.GetAllNetworkInterfaces()
+                    .Where(x => x.GetIPProperties().GatewayAddresses.Any())
+                    .Select(x =>
+                    {
+                        return x.GetIPProperties().UnicastAddresses
+                          .FirstOrDefault(ua => ua.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                          .Address.ToString();
+                    }).ToArray();
+
+                if (!ips.Any())
+                {
+                    throw new Exception("Failed to locate any ip addresses matching the specified criteria.");
+                }
+
+                result = ips.FirstOrDefault();
+
+                return result;
+            }
+        }
         private void startActivity()
         {
+            string ip = getIpAddress();
+
             // Load the device descriptor from the embedded resource file
             // Get myId as own device id
             m_storage = DeviceStorage.Load("BasicServer.DeviceDescriptor.xml");
 
             // Bacnet on UDP/IP/Ethernet
-            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(port: 0xBAC0, loggerFactory: _loggerFactory, useExclusivePort: false), loggerFactory: _loggerFactory);
+            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(port: 0xBAC0, loggerFactory: _loggerFactory, useExclusivePort: true, localEndpointIp: ip), loggerFactory: _loggerFactory);
             // or Bacnet Mstp on COM4 à 38400 bps, own master id 8
             // m_bacnet_client = new BacnetClient(new BacnetMstpProtocolTransport("COM4", 38400, 8);
             // Or Bacnet Ethernet
@@ -90,6 +136,7 @@ namespace BasicServer
             bacnet_client.Iam(m_storage.DeviceId, new BacnetSegmentations());
         }
 
+        // bacnet handlers
         private void bacnet_client_OnIam(BacnetClient sender, BacnetAddress adr, uint device_id, uint max_apdu, BacnetSegmentations segmentation, ushort vendor_id)
         {
             //ignore Iams from other devices. (Also loopbacks)

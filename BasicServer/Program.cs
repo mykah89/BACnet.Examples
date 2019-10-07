@@ -35,6 +35,8 @@ using System.Diagnostics;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace BasicServer
 {
@@ -52,9 +54,26 @@ namespace BasicServer
             Host.CreateDefaultBuilder(args)
             .UseSystemd()
             .UseWindowsService()
+            .ConfigureHostConfiguration(configHost =>
+            {
+                Environment.SetEnvironmentVariable("BASEDIR", AppContext.BaseDirectory);
+                configHost.AddJsonFile("hostsettings.json", optional: true);
+                configHost.AddEnvironmentVariables();
+                configHost.AddCommandLine(args);
+            })
+            .ConfigureAppConfiguration((context, builder) =>
+            {
+                builder.SetBasePath(AppContext.BaseDirectory);
+                builder.AddJsonFile("appsettings.json", optional: false);
+                builder.AddJsonFile($"appsettings.{context.HostingEnvironment.EnvironmentName}.json", optional: true);
+            })
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddHostedService<Worker>();
+
+                IConfiguration config = services.BuildServiceProvider().GetService<IConfiguration>();
+
+                services.Configure<BasicServerConfig>(config.GetSection(nameof(BasicServerConfig)));
             })
             .ConfigureLogging((hostingContext, logging) =>
             {
