@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using System.IO.BACnet;
 
@@ -8,12 +9,22 @@ namespace ObjectBrowseSample
     {
         private static void Main()
         {
-            var transport = new BacnetIpUdpProtocolTransport(0xBAC0, true);
-            var client = new BacnetClient(transport);
-            client.OnIam += OnIAm;
-            client.Start();
-            client.WhoIs();
-            Console.ReadLine();
+            using (var loggerFactory = LoggerFactory.Create(b =>
+            {
+                b.AddConsole(c =>
+                {
+                    c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+                });
+            }))
+            {
+                var transport = new BacnetIpUdpProtocolTransport(port: 0xBAC0, loggerFactory: loggerFactory, useExclusivePort: true);
+                var client = new BacnetClient(transport, loggerFactory: loggerFactory);
+
+                client.OnIam += OnIAm;
+                client.Start();
+                client.WhoIs();
+                Console.ReadLine();
+            }
         }
 
         private static async void OnIAm(BacnetClient sender, BacnetAddress adr,

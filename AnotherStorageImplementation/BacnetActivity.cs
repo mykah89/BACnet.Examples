@@ -31,6 +31,7 @@ using System.Text;
 using System.IO.BACnet;
 using System.Reflection;
 using BaCSharp;
+using Microsoft.Extensions.Logging;
 
 namespace AnotherStorageImplementation
 {
@@ -45,8 +46,17 @@ namespace AnotherStorageImplementation
             deviceId=_device.PROP_OBJECT_IDENTIFIER.Instance;
             device=_device;
 
-            // Bacnet on UDP/IP/Ethernet
-            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, false));
+            using (var loggerFactory = LoggerFactory.Create(b =>
+            {
+                b.AddConsole(c =>
+                {
+                    c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+                });
+            }))
+            {
+                // Bacnet on UDP/IP/Ethernet
+                bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, loggerFactory: loggerFactory), loggerFactory: loggerFactory);
+            }
 
             bacnet_client.OnIam += new BacnetClient.IamHandler(handler_OnIam);
             bacnet_client.OnReadPropertyRequest += new BacnetClient.ReadPropertyRequestHandler(handler_OnReadPropertyRequest);

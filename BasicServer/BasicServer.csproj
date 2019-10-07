@@ -3,6 +3,20 @@
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <UserSecretsId>dotnet-BasicServer-906e49db-ad9f-4308-8964-01b975cea3bc</UserSecretsId>
     <RootNamespace>BasicServer</RootNamespace>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <ProjectGuid>{DB89E653-7DBF-45BC-A92E-3754D8091E89}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
+    <AssemblyTitle>BasicServer</AssemblyTitle>
+    <Company>Microsoft</Company>
+    <Product>BasicServer</Product>
+    <Copyright>Copyright © Microsoft 2015</Copyright>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net40|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,12 +26,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0-preview8.19405.4" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.0.0-preview8.19405.4" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="3.0.0-preview8.19405.4" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="3.0.0-preview8.19405.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0-preview8.19405.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0-preview8.19405.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Systemd" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>

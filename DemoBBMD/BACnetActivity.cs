@@ -35,6 +35,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using System.Threading;
 using System.Net;
+using Microsoft.Extensions.Logging;
 
 namespace DemoBBMD
 {
@@ -67,7 +68,7 @@ namespace DemoBBMD
 
                 m_storage.ChangeOfValue += new DeviceStorage.ChangeOfValueHandler(m_storage_ChangeOfValue);
                 m_storage.ReadOverride += new DeviceStorage.ReadOverrideHandler(m_storage_ReadOverride);
-                                
+
                 // create udp service point
                 // certainly here exclusive_port usage could be set to true 
                 // in order to be sure to be accepted by all the BBMD who are checking the 
@@ -76,14 +77,24 @@ namespace DemoBBMD
 
                 // not specifying the local_endpoint_ip is a little bugy problem for broadcast when exists multiple active interfaces
                 // with some chance it's Ok !
-                udp_transport = new BacnetIpUdpProtocolTransport(0xBAC0, true);
 
-                // For IPV6, uncomment this, and comment out the previous line
-                // 187 is the device id : see DeviceStorage.xml
-                //udp_transportV6 = new BacnetIpV6UdpProtocolTransport(0xBAC0, 187, true);
-                
-                
-                m_ip_server = new BacnetClient(udp_transport);
+                using (var loggerFactory = LoggerFactory.Create(b =>
+                {
+                    b.AddConsole(c =>
+                    {
+                        c.TimestampFormat = "[yyyy-MM-dd HH:mm:ss] ";
+                    });
+                }))
+                {
+                    udp_transport = new BacnetIpUdpProtocolTransport(port: 0xBAC0, loggerFactory: loggerFactory, useExclusivePort: true);
+
+                    // For IPV6, uncomment this, and comment out the previous line
+                    // 187 is the device id : see DeviceStorage.xml
+                    //udp_transportV6 = new BacnetIpV6UdpProtocolTransport(0xBAC0, 187, true);
+
+
+                    m_ip_server = new BacnetClient(udp_transport, loggerFactory: loggerFactory);
+                }
 
                 m_ip_server.OnWhoIs += new BacnetClient.WhoIsHandler(OnWhoIs);
                 m_ip_server.OnReadPropertyRequest += new BacnetClient.ReadPropertyRequestHandler(OnReadPropertyRequest);
