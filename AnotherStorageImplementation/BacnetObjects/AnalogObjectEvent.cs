@@ -28,6 +28,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO.BACnet;
+using System.IO.BACnet.Serialize;
 
 namespace BaCSharp
 {
@@ -140,16 +141,16 @@ namespace BaCSharp
         public void Enable_Reporting(bool State, uint NotificationClassId=0)
         {
             // INTRINSIC_REPORTING
-            m_PROP_LIMIT_ENABLE.SetBit((byte)0, State); // Low Limit enabled
-            m_PROP_LIMIT_ENABLE.SetBit((byte)1, State); // High Limit enabled
+            m_PROP_LIMIT_ENABLE = m_PROP_LIMIT_ENABLE.SetBit((byte)0, State); // Low Limit enabled
+            m_PROP_LIMIT_ENABLE = m_PROP_LIMIT_ENABLE.SetBit((byte)1, State); // High Limit enabled
 
-            m_PROP_EVENT_ENABLE.SetBit((byte)0, State); // TO_OFFNORMAL (High or Low)
-            m_PROP_EVENT_ENABLE.SetBit((byte)1, State); // TO_FAULT (not used here)
-            m_PROP_EVENT_ENABLE.SetBit((byte)2, State); // TO_NORMAL (back to a good value)
+            m_PROP_EVENT_ENABLE = m_PROP_EVENT_ENABLE.SetBit((byte)0, State); // TO_OFFNORMAL (High or Low)
+            m_PROP_EVENT_ENABLE = m_PROP_EVENT_ENABLE.SetBit((byte)1, State); // TO_FAULT (not used here)
+            m_PROP_EVENT_ENABLE = m_PROP_EVENT_ENABLE.SetBit((byte)2, State); // TO_NORMAL (back to a good value)
 
-            m_PROP_ACKED_TRANSITIONS.SetBit((byte)0, true);
-            m_PROP_ACKED_TRANSITIONS.SetBit((byte)1, true);
-            m_PROP_ACKED_TRANSITIONS.SetBit((byte)2, true);
+            m_PROP_ACKED_TRANSITIONS = m_PROP_ACKED_TRANSITIONS.SetBit((byte)0, true);
+            m_PROP_ACKED_TRANSITIONS = m_PROP_ACKED_TRANSITIONS.SetBit((byte)1, true);
+            m_PROP_ACKED_TRANSITIONS = m_PROP_ACKED_TRANSITIONS.SetBit((byte)2, true);
 
             m_PROP_NOTIFICATION_CLASS = NotificationClassId;
 
