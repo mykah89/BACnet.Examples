@@ -17,9 +17,9 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BACnet\BACnet.csproj" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Properties\" />
+    <ProjectReference Include="..\..\BACnet\BACnet.csproj" />
   </ItemGroup>
 </Project>
