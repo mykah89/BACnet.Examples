@@ -103,16 +103,16 @@ namespace BaCSharp
         protected DeviceObject Mydevice;
         public virtual DeviceObject deviceOwner
         {
-            set 
+            set
             {
                 // could be only called by a device object
                 MethodBase m = new StackFrame(1).GetMethod();
                 if (m.DeclaringType == typeof(DeviceObject))
-                    Mydevice = value; 
+                    Mydevice = value;
             }
         }
 
-        public BaCSharpObject(){}
+        public BaCSharpObject() { }
 
         public BaCSharpObject(BacnetObjectId ObjId, String ObjName, String Description)
         {
@@ -122,7 +122,7 @@ namespace BaCSharp
             m_PROP_DESCRIPTION = Description;
         }
 
-        public virtual void Dispose(){}
+        public virtual void Dispose() { }
 
         public override string ToString()
         {
@@ -157,7 +157,7 @@ namespace BaCSharp
             // find first the property into the programmed methods
             // so that if a property exist in a  class and programmed in 
             // the heritage, the programmed one is the winner !
-            MethodInfo m = this.GetType().GetMethod("get2_"+propName);
+            MethodInfo m = this.GetType().GetMethod("get2_" + propName);
             if (m != null)
             {
                 propVal = (IList<BacnetValue>)m.Invoke(this, null);
@@ -177,20 +177,22 @@ namespace BaCSharp
                 else
                 {
                     object val = p.GetValue(this, null);
-                    IList<BacnetValue> ret=null;
-
+                    IList<BacnetValue> ret;
                     if (val != null)
-                        try
-                        {
-                            ret = (IList<BacnetValue>)val;    // the value is already IList<  >
-                        }
-                        catch
+                    {
+                        if (val as IList<BacnetValue> == null)
                         {
                             ret = new BacnetValue[] { new BacnetValue((o[0] as BaCSharpTypeAttribute).BacnetNativeType, val) };
                         }
+                        else
+                        {
+                            ret = (IList<BacnetValue>)val;    // the value is already IList<  >;
+                        }
+                    }
                     else
+                    {
                         ret = new BacnetValue[] { new BacnetValue(null) };
-
+                    }
 
                     return ret;
                 }
@@ -206,7 +208,7 @@ namespace BaCSharp
             {
 
                 string PropName = PropRef.ToString();
-                if (PropName[0] != 'P') PropName = "PROP_"+PropName; // private property, not in the Enum list
+                if (PropName[0] != 'P') PropName = "PROP_" + PropName; // private property, not in the Enum list
 
                 propVal = FindPropValue(PropName);
 
@@ -261,14 +263,14 @@ namespace BaCSharp
         // see MultiStateOutput for instance
         protected virtual uint BacnetMethodNametoId(String Name)
         {
-            
+
             try
             {
-                if ((Name.Substring(0, 9) == "get_PROP_")&&Char.IsDigit(Name,9))
+                if ((Name.Substring(0, 9) == "get_PROP_") && Char.IsDigit(Name, 9))
                     return Convert.ToUInt32(Name.Substring(9)); // Private property get_PROP_number
             }
             catch { }
-           
+
             try
             {
                 if (Name.Substring(0, 4) == "get_")
@@ -317,13 +319,13 @@ namespace BaCSharp
                     // Yes Invoke
                     ErrorCode_PropertyWrite = ErrorCodes.Good;
                     m.Invoke(this, new object[] { value.value, value.priority });
-                    
+
                     if (ErrorCode_PropertyWrite == ErrorCodes.Good)
                     {
                         if (OnWriteNotify != null) OnWriteNotify(this, (BacnetPropertyIds)value.property.propertyIdentifier);
                         if (OnExternalCOVNotify != null) OnExternalCOVNotify(this, (BacnetPropertyIds)value.property.propertyIdentifier);
                     }
-                    
+
                     return ErrorCode_PropertyWrite;
                 }
             }
@@ -343,7 +345,7 @@ namespace BaCSharp
                 {
                     // since Property cannot return error, this member could be set if a problem occure
                     // or an Exception can be throw
-                    ErrorCode_PropertyWrite = ErrorCodes.Good;                
+                    ErrorCode_PropertyWrite = ErrorCodes.Good;
 
                     try
                     {
@@ -384,7 +386,7 @@ namespace BaCSharp
         public ErrorCodes WritePropertyValue(BacnetClient sender, BacnetAddress adr, BacnetPropertyValue value, bool writeFromNetwork)
         {
             this.sender = sender;
-            return WritePropertyValue (value, writeFromNetwork);
+            return WritePropertyValue(value, writeFromNetwork);
         }
 
     }
