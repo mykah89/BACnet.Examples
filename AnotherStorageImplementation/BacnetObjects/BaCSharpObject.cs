@@ -56,8 +56,12 @@ namespace BaCSharp
     //]
     public abstract class BaCSharpObject
     {
-        // 3 common properties to all kind of Bacnet objects ... I suppose ! 
+        private readonly Dictionary<string, MethodInfo> _writePropertyMethods = new Dictionary<string, MethodInfo>();
+        private readonly Dictionary<string, PropertyInfo> _writePropertyProperties = new Dictionary<string, PropertyInfo>();
+        private readonly Dictionary<string, MethodInfo> _readPropertyMethods = new Dictionary<string, MethodInfo>();
+        private readonly Dictionary<string, PropertyInfo> _readPropertyProperties = new Dictionary<string, PropertyInfo>();
 
+        // 3 common properties to all kind of Bacnet objects ... I suppose ! 
         public string m_PROP_OBJECT_NAME;
         [BaCSharpType(BacnetApplicationTags.BACNET_APPLICATION_TAG_CHARACTER_STRING)]
         public virtual string PROP_OBJECT_NAME
@@ -155,16 +159,30 @@ namespace BaCSharp
             IList<BacnetValue> propVal = null;
 
             // find first the property into the programmed methods
-            // so that if a property exist in a  class and programmed in 
+            // so that if a property exist in a class and programmed in 
             // the heritage, the programmed one is the winner !
-            MethodInfo m = this.GetType().GetMethod("get2_" + propName);
+            string lookup = $"get2_{propName}";
+            MethodInfo m;
+            if (!_readPropertyMethods.TryGetValue(lookup, out m))
+            {
+                m = GetType().GetMethod(lookup);
+
+                _readPropertyMethods.Add(lookup, m);
+            }
             if (m != null)
             {
                 propVal = (IList<BacnetValue>)m.Invoke(this, null);
                 return propVal;
             }
+
             // second find the property into the programmed property
-            PropertyInfo p = this.GetType().GetProperty(propName);
+            PropertyInfo p;
+            if (!_readPropertyProperties.TryGetValue(propName, out p))
+            {
+                p = GetType().GetProperty(propName);
+
+                _readPropertyProperties.Add(lookup, p);
+            }
             if (p != null)
             {
                 object[] o = p.GetCustomAttributes(true);
@@ -316,10 +334,20 @@ namespace BaCSharp
             return ReadPropertyMultiple(sender, adr, AllMyProperties, out values);
         }
 
+
         public ErrorCodes WritePropertyValue(BacnetPropertyValue value, bool writeFromNetwork)
         {
-            // First try to found the set2_ method in the class code
-            MethodInfo m = this.GetType().GetMethod("set2_" + value.property.ToString());
+            // First try to find the set2_ method in the class code
+            string lookup = $"set2_{value.property.ToString()}";
+
+            MethodInfo m;
+            if (!_writePropertyMethods.TryGetValue(lookup, out m))
+            {
+                m = GetType().GetMethod(lookup);
+
+                _writePropertyMethods.Add(lookup, m);
+            }
+
             try
             {
                 if (m != null)
@@ -342,8 +370,15 @@ namespace BaCSharp
                 return ErrorCodes.GenericError;
             }
 
+
             // Second, if not found, try to find in the programmed properties list
-            PropertyInfo p = this.GetType().GetProperty(value.property.ToString());
+            PropertyInfo p;
+            if (!_writePropertyProperties.TryGetValue(value.property.ToString(), out p))
+            {
+                p = GetType().GetProperty(value.property.ToString());
+
+                _writePropertyProperties.Add(lookup, p);
+            }
 
             if (p != null)
             {
