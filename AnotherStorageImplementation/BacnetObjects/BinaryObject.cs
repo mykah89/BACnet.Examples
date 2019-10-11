@@ -59,7 +59,7 @@ namespace BaCSharp
             set
             {
                 m_PROP_OUT_OF_SERVICE = value;
-                m_PROP_STATUS_FLAGS.SetBit((byte)3, value);
+                m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)3, value);
                 ExternalCOVManagement(BacnetPropertyIds.PROP_OUT_OF_SERVICE);
             }
         }
@@ -95,7 +95,7 @@ namespace BaCSharp
         public virtual uint internal_PROP_PRESENT_VALUE
         {
             get { return m_PROP_PRESENT_VALUE; }
-            set 
+            set
             {
                 if (value != m_PROP_PRESENT_VALUE)
                 {
@@ -105,14 +105,14 @@ namespace BaCSharp
         }
 
         public BinaryObject(BacnetObjectId ObjId, String ObjName, String Description, bool InitialValue)
-            : base(ObjId, ObjName,  Description)
+            : base(ObjId, ObjName, Description)
         {
-            m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
 
-            m_PROP_PRESENT_VALUE = InitialValue==true ? (uint)1 : 0;
+            m_PROP_PRESENT_VALUE = InitialValue == true ? (uint)1 : 0;
 
         }
         public BinaryObject() { }

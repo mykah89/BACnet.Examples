@@ -225,9 +225,9 @@ namespace AnotherStorageImplementation
             for (int i = 0; i < 7; i++) week.SetBit((byte)i, true); // Monday to Sunday
             // transition
             BacnetBitString transition = new BacnetBitString();
-            transition.SetBit(0, true); // To OffNormal
-            transition.SetBit(1, true); // To Fault
-            transition.SetBit(2, true); // To Normal
+            transition = transition.SetBit(0, true); // To OffNormal
+            transition = transition.SetBit(1, true); // To Fault
+            transition = transition.SetBit(2, true); // To Normal
 
             DeviceReportingRecipient r = new DeviceReportingRecipient
             (

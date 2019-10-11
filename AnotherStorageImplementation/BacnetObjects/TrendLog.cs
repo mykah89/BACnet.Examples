@@ -95,10 +95,10 @@ namespace BaCSharp
         public TrendLog(int ObjId, String ObjName, String Description, uint Logsize, BacnetTrendLogValueType DefaultValueType)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_TRENDLOG,(uint)ObjId), ObjName, Description)
         {
-            m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
 
             this.DefaultValueType = DefaultValueType;
             m_PROP_BUFFER_SIZE = Logsize;

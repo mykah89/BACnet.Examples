@@ -46,7 +46,7 @@ namespace BaCSharp
             set
             {  
                 m_PROP_OUT_OF_SERVICE = value;
-                m_PROP_STATUS_FLAGS.SetBit((byte)3, value);
+                m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)3, value);
                 ExternalCOVManagement(BacnetPropertyIds.PROP_OUT_OF_SERVICE);
                 DoScheduling();
             }
@@ -222,10 +222,10 @@ namespace BaCSharp
         public Schedule(int ObjId, String ObjName, String Description)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_SCHEDULE, (uint)ObjId), ObjName, Description)
         {
-            m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
 
             m_PROP_EFFECTIVE_PERIOD.Add(new BacnetValue(BacnetApplicationTags.BACNET_APPLICATION_TAG_DATE, DateTime.Now));
             m_PROP_EFFECTIVE_PERIOD.Add(new BacnetValue(BacnetApplicationTags.BACNET_APPLICATION_TAG_DATE, DateTime.Now.AddYears(10)));

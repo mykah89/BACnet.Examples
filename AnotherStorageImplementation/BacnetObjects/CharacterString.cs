@@ -70,10 +70,10 @@ namespace BaCSharp
         public CharacterString(int ObjId, String ObjName, String Description, String InitialValue, bool ReadOnly)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_CHARACTERSTRING_VALUE,(uint)ObjId), ObjName,  Description)
         {
-            m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
 
             m_PRESENT_VALUE_ReadOnly = ReadOnly;
             m_PROP_PRESENT_VALUE = InitialValue;

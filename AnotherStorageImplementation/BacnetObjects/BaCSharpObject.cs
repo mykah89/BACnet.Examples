@@ -241,7 +241,6 @@ namespace BaCSharp
 
         public bool ReadPropertyMultiple(BacnetClient sender, BacnetAddress adr, IList<BacnetPropertyReference> properties, out IList<BacnetPropertyValue> values)
         {
-
             values = new BacnetPropertyValue[properties.Count];
 
             int count = 0;
@@ -263,24 +262,33 @@ namespace BaCSharp
         // see MultiStateOutput for instance
         protected virtual uint BacnetMethodNametoId(String Name)
         {
-
-            try
+            if (Name.Length >= 9 && (Name.Substring(0, 9) == "get_PROP_") && Char.IsDigit(Name, 9))
             {
-                if ((Name.Substring(0, 9) == "get_PROP_") && Char.IsDigit(Name, 9))
-                    return Convert.ToUInt32(Name.Substring(9)); // Private property get_PROP_number
+                uint result;
+                if (uint.TryParse(Name.Substring(9), out result)) // Private property get_PROP_number
+                {
+                    return result;
+                }
             }
-            catch { }
 
-            try
+            if (Name.Length >= 4 && Name.Substring(0, 4) == "get_")
             {
-                if (Name.Substring(0, 4) == "get_")
-                    return (uint)(BacnetPropertyIds)Enum.Parse(typeof(BacnetPropertyIds), Name.Substring(4), true);
-                if (Name.Substring(0, 5) == "get2_")
-                    return (uint)(BacnetPropertyIds)Enum.Parse(typeof(BacnetPropertyIds), Name.Substring(5), true);
+                BacnetPropertyIds result;
+                if (Enum.TryParse(Name.Substring(4), true, out result))
+                {
+                    return (uint)result;
+                }
             }
-            catch { }
+            else if (Name.Length >= 5 && Name.Substring(0, 5) == "get2_")
+            {
+                BacnetPropertyIds result;
+                if (Enum.TryParse(Name.Substring(5), true, out result))
+                {
+                    return (uint)result;
+                }
+            }
 
-            return (uint)((int)BacnetPropertyIds.MAX_BACNET_PROPERTY_ID);
+            return (uint)BacnetPropertyIds.MAX_BACNET_PROPERTY_ID;
         }
 
         public bool ReadPropertyAll(BacnetClient sender, BacnetAddress adr, out IList<BacnetPropertyValue> values)

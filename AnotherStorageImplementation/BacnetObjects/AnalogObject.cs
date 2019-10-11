@@ -58,11 +58,12 @@ namespace BaCSharp
         public virtual bool PROP_OUT_OF_SERVICE
         {
             get { return m_PROP_OUT_OF_SERVICE; }
-            set { 
-                    m_PROP_OUT_OF_SERVICE=value;
-                    m_PROP_STATUS_FLAGS.SetBit((byte)3, value);
-                    ExternalCOVManagement(BacnetPropertyIds.PROP_OUT_OF_SERVICE);
-                }
+            set
+            {
+                m_PROP_OUT_OF_SERVICE = value;
+                m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)3, value);
+                ExternalCOVManagement(BacnetPropertyIds.PROP_OUT_OF_SERVICE);
+            }
         }
 
         public bool m_PRESENT_VALUE_ReadOnly = false;
@@ -71,7 +72,7 @@ namespace BaCSharp
         public virtual T PROP_PRESENT_VALUE
         {
             get { return m_PROP_PRESENT_VALUE; }
-            set 
+            set
             {
                 if (m_PRESENT_VALUE_ReadOnly == false)
                 {
@@ -87,7 +88,7 @@ namespace BaCSharp
         public virtual T internal_PROP_PRESENT_VALUE
         {
             get { return m_PROP_PRESENT_VALUE; }
-            set 
+            set
             {
                 if (!value.Equals(m_PROP_PRESENT_VALUE))
                 {
@@ -98,16 +99,16 @@ namespace BaCSharp
             }
         }
 
-        public AnalogObject() {}
+        public AnalogObject() { }
 
         public AnalogObject(BacnetObjectId ObjId, String ObjName, String Description, T InitialValue, BacnetUnitsId Unit)
             : base(ObjId, ObjName, Description)
         {
 
-            m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
-            m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)0, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)1, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)2, false);
+            m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)3, false);
 
             m_PROP_UNITS = (uint)Unit;
 

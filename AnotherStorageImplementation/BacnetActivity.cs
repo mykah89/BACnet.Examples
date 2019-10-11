@@ -69,9 +69,9 @@ namespace AnotherStorageImplementation
             bacnet_client.OnAtomicReadFileRequest += new BacnetClient.AtomicReadFileRequestHandler(handler_OnAtomicReadFileRequest);
             // A sample to shows CreateObject & DeleteObject
             bacnet_client.OnCreateObjectRequest += new BacnetClient.CreateObjectRequestHandler(handler_OnCreateObjectRequest);
-            device.m_PROP_PROTOCOL_SERVICES_SUPPORTED.SetBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_CREATE_OBJECT, true);
+            device.m_PROP_PROTOCOL_SERVICES_SUPPORTED = device.m_PROP_PROTOCOL_SERVICES_SUPPORTED.SetBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_CREATE_OBJECT, true);
             bacnet_client.OnDeleteObjectRequest += new BacnetClient.DeleteObjectRequestHandler(handler_OnDeleteObjectRequest);
-            device.m_PROP_PROTOCOL_SERVICES_SUPPORTED.SetBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_DELETE_OBJECT, true);
+            device.m_PROP_PROTOCOL_SERVICES_SUPPORTED = device.m_PROP_PROTOCOL_SERVICES_SUPPORTED.SetBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_DELETE_OBJECT, true);
 
             BaCSharpObject.OnExternalCOVNotify += new BaCSharpObject.WriteNotificationCallbackHandler(handler_OnCOVManagementNotify);
 

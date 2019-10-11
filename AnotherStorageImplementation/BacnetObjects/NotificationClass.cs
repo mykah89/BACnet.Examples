@@ -96,9 +96,9 @@ namespace BaCSharp
             for (int i = 0; i < 3; i++)
                 m_PROP_PRIORITY[i]=new BacnetValue(BacnetApplicationTags.BACNET_APPLICATION_TAG_UNSIGNED_INT, (uint)127);
 
-            m_PROP_ACK_REQUIRED.SetBit((byte)0, false);
-            m_PROP_ACK_REQUIRED.SetBit((byte)1, false);
-            m_PROP_ACK_REQUIRED.SetBit((byte)2, false);
+            m_PROP_ACK_REQUIRED = m_PROP_ACK_REQUIRED.SetBit((byte)0, false);
+            m_PROP_ACK_REQUIRED = m_PROP_ACK_REQUIRED.SetBit((byte)1, false);
+            m_PROP_ACK_REQUIRED = m_PROP_ACK_REQUIRED.SetBit((byte)2, false);
 
         }
         public NotificationClass() { }
