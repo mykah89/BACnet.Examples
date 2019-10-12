@@ -30,6 +30,7 @@ using System.Text;
 using System.IO.BACnet;
 using System.Reflection;
 using System.Diagnostics;
+using System.Collections.Concurrent;
 
 namespace BaCSharp
 {
@@ -56,10 +57,10 @@ namespace BaCSharp
     //]
     public abstract class BaCSharpObject
     {
-        private readonly Dictionary<string, MethodInfo> _writePropertyMethods = new Dictionary<string, MethodInfo>();
-        private readonly Dictionary<string, PropertyInfo> _writePropertyProperties = new Dictionary<string, PropertyInfo>();
-        private readonly Dictionary<string, MethodInfo> _readPropertyMethods = new Dictionary<string, MethodInfo>();
-        private readonly Dictionary<string, PropertyInfo> _readPropertyProperties = new Dictionary<string, PropertyInfo>();
+        private readonly ConcurrentDictionary<string, MethodInfo> _writePropertyMethods = new ConcurrentDictionary<string, MethodInfo>();
+        private readonly ConcurrentDictionary<string, PropertyInfo> _writePropertyProperties = new ConcurrentDictionary<string, PropertyInfo>();
+        private readonly ConcurrentDictionary<string, MethodInfo> _readPropertyMethods = new ConcurrentDictionary<string, MethodInfo>();
+        private readonly ConcurrentDictionary<string, PropertyInfo> _readPropertyProperties = new ConcurrentDictionary<string, PropertyInfo>();
 
         // 3 common properties to all kind of Bacnet objects ... I suppose ! 
         public string m_PROP_OBJECT_NAME;
@@ -167,7 +168,7 @@ namespace BaCSharp
             {
                 m = GetType().GetMethod(lookup);
 
-                _readPropertyMethods.Add(lookup, m);
+                _readPropertyMethods.TryAdd(lookup, m);
             }
             if (m != null)
             {
@@ -181,7 +182,7 @@ namespace BaCSharp
             {
                 p = GetType().GetProperty(propName);
 
-                _readPropertyProperties.Add(lookup, p);
+                _readPropertyProperties.TryAdd(lookup, p);
             }
             if (p != null)
             {
@@ -345,7 +346,7 @@ namespace BaCSharp
             {
                 m = GetType().GetMethod(lookup);
 
-                _writePropertyMethods.Add(lookup, m);
+                _writePropertyMethods.TryAdd(lookup, m);
             }
 
             try
@@ -377,7 +378,7 @@ namespace BaCSharp
             {
                 p = GetType().GetProperty(value.property.ToString());
 
-                _writePropertyProperties.Add(lookup, p);
+                _writePropertyProperties.TryAdd(lookup, p);
             }
 
             if (p != null)
