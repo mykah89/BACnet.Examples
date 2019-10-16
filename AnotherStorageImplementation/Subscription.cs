@@ -103,7 +103,9 @@ namespace AnotherStorageImplementation
                 for (int i = 0; i < entry.Value.Count; i++)
                 {
                     if (entry.Value[i].reciever_address.Equals(reciever_address))
-                        entry.Value[i].lifetime=0;
+                    {
+                        entry.Value[i].start = DateTime.Now.AddSeconds(-(entry.Value[i].lifetime + 1));
+                    }
                 }
             }
             // will be removed on the next call to RemoveOldSubscriptions
