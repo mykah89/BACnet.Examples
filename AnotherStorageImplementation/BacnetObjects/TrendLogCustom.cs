@@ -36,7 +36,7 @@ namespace BaCSharp
     class TrendLogCustom : TrendLog
     {
         // first a constructor calling the parent constructor
-        public TrendLogCustom(int ObjId, String ObjName, String Description, uint Logsize, BacnetTrendLogValueType DefaultValueType)
+        public TrendLogCustom(int ObjId, string ObjName, string Description, uint Logsize, BacnetTrendLogValueType DefaultValueType)
             : base(ObjId, ObjName, Description, Logsize, DefaultValueType) { }
         // second an empty constructor (needed only by the serialisation process)
         public TrendLogCustom() { }

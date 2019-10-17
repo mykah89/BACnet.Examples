@@ -101,7 +101,7 @@ namespace BaCSharp
 
         public AnalogObject() { }
 
-        public AnalogObject(BacnetObjectId ObjId, String ObjName, String Description, T InitialValue, BacnetUnitsId Unit)
+        public AnalogObject(BacnetObjectId ObjId, string ObjName, string Description, T InitialValue, BacnetUnitsId Unit)
             : base(ObjId, ObjName, Description)
         {
 

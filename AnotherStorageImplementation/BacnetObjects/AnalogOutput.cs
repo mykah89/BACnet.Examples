@@ -34,7 +34,7 @@ namespace BaCSharp
 
     public class AnalogOutput<T> : AnalogValueAndOutput<T>
     {
-        public AnalogOutput(int ObjId, String ObjName, String Description, T InitialValue, BacnetUnitsId Unit)
+        public AnalogOutput(int ObjId, string ObjName, string Description, T InitialValue, BacnetUnitsId Unit)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_ANALOG_OUTPUT, (uint)ObjId), ObjName, Description, InitialValue, Unit, true)
         {
         }
@@ -43,7 +43,7 @@ namespace BaCSharp
 
     public class AnalogValue<T> : AnalogValueAndOutput<T>
     {
-        public AnalogValue(int ObjId, String ObjName, String Description, T InitialValue, BacnetUnitsId Unit, bool WithPriorityArray)
+        public AnalogValue(int ObjId, string ObjName, string Description, T InitialValue, BacnetUnitsId Unit, bool WithPriorityArray)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_ANALOG_VALUE, (uint)ObjId), ObjName, Description, InitialValue, Unit, WithPriorityArray)
         {
         }
@@ -72,7 +72,7 @@ namespace BaCSharp
             get { return m_PROP_PRIORITY_ARRAY; }
         }
 
-        public AnalogValueAndOutput(BacnetObjectId ObjId, String ObjName, String Description, T InitialValue, BacnetUnitsId Unit, bool WithPriorityArray)
+        public AnalogValueAndOutput(BacnetObjectId ObjId, string ObjName, string Description, T InitialValue, BacnetUnitsId Unit, bool WithPriorityArray)
             : base(ObjId, ObjName, Description, InitialValue, Unit)
         {
             if (WithPriorityArray == true)

@@ -34,7 +34,7 @@ namespace BaCSharp
    
     public class MultiStateOutput : MultiStateValueAndOutput
     {
-        public MultiStateOutput(int ObjId, String ObjName, String Description, uint InitialValue, uint StatesNumber)
+        public MultiStateOutput(int ObjId, string ObjName, string Description, uint InitialValue, uint StatesNumber)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_MULTI_STATE_OUTPUT, (uint)ObjId), ObjName, Description, InitialValue, StatesNumber, true)
         {
         }
@@ -45,7 +45,7 @@ namespace BaCSharp
     [Serializable]
     public class MultiStateValue : MultiStateValueAndOutput
     {
-        public MultiStateValue(int ObjId, String ObjName, String Description, uint InitialValue, uint StatesNumber, bool WithPriorityArray)
+        public MultiStateValue(int ObjId, string ObjName, string Description, uint InitialValue, uint StatesNumber, bool WithPriorityArray)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_MULTI_STATE_VALUE, (uint)ObjId), ObjName, Description, InitialValue, StatesNumber, WithPriorityArray)
         {
         }
@@ -73,7 +73,7 @@ namespace BaCSharp
             get { return m_PROP_STATE_TEXT; }
         }
 
-        public MultiStateValueAndOutput(BacnetObjectId ObjId, String ObjName, String Description, uint InitialValue, uint StatesNumber, bool WithPriorityArray)
+        public MultiStateValueAndOutput(BacnetObjectId ObjId, string ObjName, string Description, uint InitialValue, uint StatesNumber, bool WithPriorityArray)
             : base(ObjId, ObjName, Description, InitialValue, BacnetUnitsId.UNITS_DEGREES_PHASE, true)
         {
             // InitialValue must be within 1 and m_PROP_NUMBER_OF_STATES

@@ -58,7 +58,7 @@ namespace AnotherStorageImplementation
         }
         public int GetTimeRemaining()
         {
-
+            // lifetime of 0 means subscription is indefinite
             if (lifetime == 0) return 0;
 
             uint elapse = (uint)(DateTime.Now - start).TotalSeconds;
@@ -66,7 +66,6 @@ namespace AnotherStorageImplementation
             if (lifetime > elapse)
                 return (int)(lifetime - elapse);
             else
-
                 return -1;
                 
         }

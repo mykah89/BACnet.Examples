@@ -311,7 +311,7 @@ namespace AnotherStorageImplementation
             Newtonsoft.Json.JsonSerializerSettings settings = new Newtonsoft.Json.JsonSerializerSettings();
             settings.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
 
-            String s;
+            string s;
             lock (device)
                 s=Newtonsoft.Json.JsonConvert.SerializeObject(device, settings);
             

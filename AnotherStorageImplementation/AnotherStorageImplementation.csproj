@@ -20,6 +20,6 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\BACnet\BACnet.csproj" />
+    <ProjectReference Include="..\BACnet\BACnet.csproj" />
   </ItemGroup>
 </Project>

@@ -50,7 +50,7 @@ namespace BaCSharp
             get { return m_PROP_STATE_TEXT; }
         }
 
-        public MultiStateInput(int ObjId, String ObjName, String Description, uint StatesNumber, uint InitialValue, bool WithPriorityArray)
+        public MultiStateInput(int ObjId, string ObjName, string Description, uint StatesNumber, uint InitialValue, bool WithPriorityArray)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_MULTI_STATE_INPUT, (uint)ObjId), ObjName, Description, InitialValue, BacnetUnitsId.UNITS_DEGREES_PHASE)
         {
             // InitialValue must be within 1 and m_PROP_NUMBER_OF_STATES

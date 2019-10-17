@@ -33,7 +33,7 @@ namespace BaCSharp
 {
     public class BinaryOutput : BinaryValueAndOutput
     {
-        public BinaryOutput(int ObjId, String ObjName, String Description, bool InitialValue)
+        public BinaryOutput(int ObjId, string ObjName, string Description, bool InitialValue)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_BINARY_OUTPUT, (uint)ObjId), ObjName, Description, InitialValue, true)
         {
         }
@@ -43,7 +43,7 @@ namespace BaCSharp
     [Serializable]
     public class BinaryValue : BinaryValueAndOutput
     {
-        public BinaryValue(int ObjId, String ObjName, String Description, bool InitialValue, bool WithPriorityArray)
+        public BinaryValue(int ObjId, string ObjName, string Description, bool InitialValue, bool WithPriorityArray)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_BINARY_VALUE, (uint)ObjId), ObjName, Description, InitialValue, WithPriorityArray)
         {
         }
@@ -74,7 +74,7 @@ namespace BaCSharp
             get { return m_PROP_PRIORITY_ARRAY; }
         }
 
-        public BinaryValueAndOutput(BacnetObjectId ObjId, String ObjName, String Description, bool InitialValue, bool WithPriorityArray)
+        public BinaryValueAndOutput(BacnetObjectId ObjId, string ObjName, string Description, bool InitialValue, bool WithPriorityArray)
             : base(ObjId, ObjName, Description, InitialValue)
         {
             if (WithPriorityArray == true)

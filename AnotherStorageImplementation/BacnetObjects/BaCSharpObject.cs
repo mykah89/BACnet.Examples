@@ -119,7 +119,7 @@ namespace BaCSharp
 
         public BaCSharpObject() { }
 
-        public BaCSharpObject(BacnetObjectId ObjId, String ObjName, String Description)
+        public BaCSharpObject(BacnetObjectId ObjId, string ObjName, string Description)
         {
             m_PROP_OBJECT_IDENTIFIER = ObjId;
             m_PROP_OBJECT_NAME = ObjName;

@@ -35,7 +35,7 @@ namespace BaCSharp
     public class BacnetFile:BaCSharpObject
     {
         [BaCSharpType(BacnetApplicationTags.BACNET_APPLICATION_TAG_CHARACTER_STRING)]
-        public virtual String PROP_FILE_TYPE
+        public virtual string PROP_FILE_TYPE
         {
             get { return "Binary"; }
         }
@@ -69,9 +69,9 @@ namespace BaCSharp
             }
         }
 
-        public String FilePath;
+        public string FilePath;
 
-        public BacnetFile(int ObjId, String ObjName, String Description, String FilePath, bool ReadOnly)
+        public BacnetFile(int ObjId, string ObjName, string Description, string FilePath, bool ReadOnly)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_FILE, (uint)ObjId), ObjName,  Description)
         {
             m_PROP_READ_ONLY = ReadOnly;

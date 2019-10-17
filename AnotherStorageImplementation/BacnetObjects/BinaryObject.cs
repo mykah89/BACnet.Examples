@@ -104,7 +104,7 @@ namespace BaCSharp
             }
         }
 
-        public BinaryObject(BacnetObjectId ObjId, String ObjName, String Description, bool InitialValue)
+        public BinaryObject(BacnetObjectId ObjId, string ObjName, string Description, bool InitialValue)
             : base(ObjId, ObjName, Description)
         {
             m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)0, false);

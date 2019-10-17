@@ -219,7 +219,7 @@ namespace BaCSharp
             }
         }
 
-        public Schedule(int ObjId, String ObjName, String Description)
+        public Schedule(int ObjId, string ObjName, string Description)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_SCHEDULE, (uint)ObjId), ObjName, Description)
         {
             m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)0, false);

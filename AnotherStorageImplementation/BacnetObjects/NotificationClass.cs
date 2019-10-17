@@ -88,7 +88,7 @@ namespace BaCSharp
 
         public BacnetObjectId Device;
 
-        public NotificationClass(int ObjId, String ObjName, String Description, BacnetObjectId Device)
+        public NotificationClass(int ObjId, string ObjName, string Description, BacnetObjectId Device)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_NOTIFICATION_CLASS, (uint)ObjId), ObjName, Description)
         {
             this.Device = Device;

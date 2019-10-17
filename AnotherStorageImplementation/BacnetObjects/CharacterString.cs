@@ -42,9 +42,9 @@ namespace BaCSharp
         }
 
         public bool m_PRESENT_VALUE_ReadOnly = false;
-        public String m_PROP_PRESENT_VALUE;
+        public string m_PROP_PRESENT_VALUE;
 
-        public virtual String PROP_PRESENT_VALUE
+        public virtual string PROP_PRESENT_VALUE
         {
             get { return m_PROP_PRESENT_VALUE; }
             set
@@ -61,13 +61,13 @@ namespace BaCSharp
 
         // This property shows the same attribut as the previous, but without restriction
         // for internal usage, not for network callbacks
-        public virtual String internal_PROP_PRESENT_VALUE
+        public virtual string internal_PROP_PRESENT_VALUE
         {
             get { return m_PROP_PRESENT_VALUE; }
             set { m_PROP_PRESENT_VALUE = value; ExternalCOVManagement(BacnetPropertyIds.PROP_PRESENT_VALUE); }
         }
 
-        public CharacterString(int ObjId, String ObjName, String Description, String InitialValue, bool ReadOnly)
+        public CharacterString(int ObjId, string ObjName, string Description, string InitialValue, bool ReadOnly)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_CHARACTERSTRING_VALUE,(uint)ObjId), ObjName,  Description)
         {
             m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)0, false);

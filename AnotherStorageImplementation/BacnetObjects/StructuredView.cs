@@ -40,7 +40,7 @@ namespace BaCSharp
             get { return m_PROP_SUBORDINATE_LIST; }
         }
 
-        public StructuredView(int ObjId, String ObjName, String Description)
+        public StructuredView(int ObjId, string ObjName, string Description)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_STRUCTURED_VIEW, (uint)ObjId), ObjName,  Description)
         {
         }

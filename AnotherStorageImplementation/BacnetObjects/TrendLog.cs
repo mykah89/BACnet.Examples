@@ -92,7 +92,7 @@ namespace BaCSharp
 
         public  BacnetTrendLogValueType DefaultValueType;
 
-        public TrendLog(int ObjId, String ObjName, String Description, uint Logsize, BacnetTrendLogValueType DefaultValueType)
+        public TrendLog(int ObjId, string ObjName, string Description, uint Logsize, BacnetTrendLogValueType DefaultValueType)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_TRENDLOG,(uint)ObjId), ObjName, Description)
         {
             m_PROP_STATUS_FLAGS = m_PROP_STATUS_FLAGS.SetBit((byte)0, false);

@@ -63,7 +63,7 @@ namespace BaCSharp
         private int tmrId = 0;
         private object LockObj = new object();
 
-        public Calendar(int ObjId, String ObjName, String Description)
+        public Calendar(int ObjId, string ObjName, string Description)
              : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_CALENDAR,(uint)ObjId), ObjName, Description)
         {
             CalenarEntry.Entries = new List<object>();

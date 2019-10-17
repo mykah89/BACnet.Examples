@@ -67,19 +67,19 @@ namespace BaCSharp
         }
 
         [BaCSharpType(BacnetApplicationTags.BACNET_APPLICATION_TAG_CHARACTER_STRING)]
-        public virtual String PROP_VENDOR_NAME
+        public virtual string PROP_VENDOR_NAME
         {
             get { return "F. Chaxel MIT licence, 2015"; }
         }
 
         [BaCSharpType(BacnetApplicationTags.BACNET_APPLICATION_TAG_CHARACTER_STRING)]
-        public virtual String PROP_MODEL_NAME
+        public virtual string PROP_MODEL_NAME
         {
             get { return "Model A"; }
         }
 
         [BaCSharpType(BacnetApplicationTags.BACNET_APPLICATION_TAG_CHARACTER_STRING)]
-        public virtual String PROP_FIRMWARE_REVISION
+        public virtual string PROP_FIRMWARE_REVISION
         {
             get { return "Version Beta 1"; }
         }
@@ -91,7 +91,7 @@ namespace BaCSharp
         }
 
         [BaCSharpType(BacnetApplicationTags.BACNET_APPLICATION_TAG_CHARACTER_STRING)]
-        public virtual String PROP_APPLICATION_SOFTWARE_VERSION
+        public virtual string PROP_APPLICATION_SOFTWARE_VERSION
         {
             get { return "1"; }
         }
@@ -166,7 +166,7 @@ namespace BaCSharp
         public BacnetClient DirectIp;
         public bool ShouldSerializeDirectIp() { return false; } // for NewtonJson
 
-        public DeviceObject(uint Id, String DeviceName, String Description, bool UseStructuredView)
+        public DeviceObject(uint Id, string DeviceName, string Description, bool UseStructuredView)
             : base(new BacnetObjectId(BacnetObjectTypes.OBJECT_DEVICE, Id), DeviceName, Description)
         {
             this.UseStructuredView = UseStructuredView;
