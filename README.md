@@ -73,7 +73,7 @@ Tested on a Raspberry Pi Model B. Similar code based on AnotherStorageImplementa
 
 ### BacnetToDatabase
 
-A sample application that will transfer all present values from a given device, to a SQL database. (SQL CE Local DB.)
+A sample application that will transfer all present values from a given device, to a SQL database. (SQL Lite Local DB.)
 
 ### ObjectBrowseSample
 
