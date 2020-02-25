@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="DeviceStorage.xml">
@@ -13,11 +13,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="bacnet" Version="1.0.4-prerelease" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BACnet\BACnet.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

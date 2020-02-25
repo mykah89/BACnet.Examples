@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>BaCSharp</RootNamespace>
-    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="packages\**" />
@@ -13,13 +13,11 @@
     <None Remove="Tests\**" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="BACnet" Version="1.0.4-prerelease" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="3.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BACnet\BACnet.csproj" />
   </ItemGroup>
 </Project>

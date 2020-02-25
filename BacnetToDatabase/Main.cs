@@ -1,71 +1,58 @@
-﻿/**************************************************************************
-*                           MIT License
-* 
-* Copyright (C) 2015 Morten Kvistgaard <mk@pch-engineering.dk>
-*                    Frederic Chaxel <fchaxel@free.fr 
-*
-* Permission is hereby granted, free of charge, to any person obtaining
-* a copy of this software and associated documentation files (the
-* "Software"), to deal in the Software without restriction, including
-* without limitation the rights to use, copy, modify, merge, publish,
-* distribute, sublicense, and/or sell copies of the Software, and to
-* permit persons to whom the Software is furnished to do so, subject to
-* the following conditions:
-*
-* The above copyright notice and this permission notice shall be included
-* in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*
-*********************************************************************/
-
+﻿using BacnetToDatabase.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using System.IO.BACnet;
 using System.IO;
-using System.Data.SqlServerCe;
+using System.IO.BACnet;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace BacnetToDatabase
 {
     public partial class Main : Form
     {
-        private BacnetClient bacnet_client;
-        private string dbName = "SampleDatabase.sdf";
+        private BacnetClient _bacnet_client;
+        private DbContextOptionsBuilder _contextOptionsBuilder = new DbContextOptionsBuilder<B2DBDBContext>();
+        private string _dbName = "SampleDatabase.db";
 
         public Main()
         {
             InitializeComponent();
 
             // Bacnet on UDP/IP/Ethernet
-            bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, false));
-            bacnet_client.OnIam += new BacnetClient.IamHandler(bacnet_client_OnIam);
-            bacnet_client.Start();
+            _bacnet_client = new BacnetClient(new BacnetIpUdpProtocolTransport(0xBAC0, loggerFactory: NullLoggerFactory.Instance, useExclusivePort: false), NullLoggerFactory.Instance);
+            _bacnet_client.OnIam += new BacnetClient.IamHandler(bacnet_client_OnIam);
+            _bacnet_client.Start();
+
+            _contextOptionsBuilder.UseSqlite($"Data Source={Path.Combine(Environment.CurrentDirectory, _dbName)}");
         }
 
         private void bacnet_client_OnIam(BacnetClient sender, BacnetAddress adr, uint device_id, uint max_apdu, BacnetSegmentations segmentation, ushort vendor_id)
         {
             this.Invoke((MethodInvoker)delegate
             {
-                ListViewItem itm = m_list.Items.Add(adr.ToString());
-                itm.Tag = new KeyValuePair<BacnetAddress, uint>(adr, device_id);
-                itm.SubItems.Add("");
+                lock (m_list)
+                {
+                    string adrKey = adr.ToString();
+                    
+                    if (m_list.FindItemWithText(adrKey) == null)
+                    {
+                        ListViewItem itm = m_list.Items.Add(adrKey);
+                        itm.Tag = new KeyValuePair<BacnetAddress, uint>(adr, device_id);
+                        itm.SubItems.Add("");
 
-                //read name
-                IList<BacnetValue> values;
-                if (bacnet_client.ReadPropertyRequest(adr, new BacnetObjectId(BacnetObjectTypes.OBJECT_DEVICE, device_id), BacnetPropertyIds.PROP_OBJECT_NAME, out values))
-                    itm.SubItems[1].Text = (string)values[0].Value;
-
+                        //read name
+                        IList<BacnetValue> values = _bacnet_client.ReadPropertyRequest(adr, new BacnetObjectId(BacnetObjectTypes.OBJECT_DEVICE, device_id), BacnetPropertyIds.PROP_OBJECT_NAME);
+                        if (values.Count > 0)
+                            itm.SubItems[1].Text = (string)values[0].Value;
+                    }
+                }
             }, null);
         }
 
@@ -77,7 +64,7 @@ namespace BacnetToDatabase
 
         private void SendSearch()
         {
-            bacnet_client.WhoIs();
+            _bacnet_client.WhoIs();
         }
 
         private void m_SearchButton_Click(object sender, EventArgs e)
@@ -87,21 +74,11 @@ namespace BacnetToDatabase
 
         private void m_TransferButton_Click(object sender, EventArgs e)
         {
-            string dbFile = Path.Combine(Environment.CurrentDirectory, dbName);
-            string connString = @"Data Source=" + dbFile;
-            if (!File.Exists(dbFile))
+            using (B2DBDBContext context = new B2DBDBContext(_contextOptionsBuilder.Options))
             {
-                SqlCeEngine en = new SqlCeEngine(connString);
-                //new System.Data.SqlServerCe.SqlCeEngin(connectionString);
-                en.CreateDatabase();
-
-                using (SqlCeConnection conn = new SqlCeConnection(connString))
+                if (context.Database.EnsureCreated())
                 {
-                    conn.Open();
-
-                    SqlCeCommand cmd = conn.CreateCommand();
-                    cmd.CommandText = "CREATE TABLE SampleTable(ObjectName NVARCHAR(255), PropertyId NVARCHAR(255),Value NVARCHAR(255))";
-                    cmd.ExecuteNonQuery();
+                    context.Database.ExecuteSqlRaw("CREATE TABLE SampleTable(ObjectName NVARCHAR(255), PropertyId NVARCHAR(255),Value NVARCHAR(255));");
                 }
             }
 
@@ -113,13 +90,8 @@ namespace BacnetToDatabase
             }
             KeyValuePair<BacnetAddress, uint> device = (KeyValuePair<BacnetAddress, uint>)m_list.SelectedItems[0].Tag;
 
-            //open database connection
-            SqlCeConnection con = new SqlCeConnection(connString);
-            con.Open();
-
             //retrieve list of 'properties'
-            IList<BacnetValue> value_list;
-            bacnet_client.ReadPropertyRequest(device.Key, new BacnetObjectId(BacnetObjectTypes.OBJECT_DEVICE, device.Value), BacnetPropertyIds.PROP_OBJECT_LIST, out value_list);
+            IList<BacnetValue> value_list = _bacnet_client.ReadPropertyRequest(device.Key, new BacnetObjectId(BacnetObjectTypes.OBJECT_DEVICE, device.Value), BacnetPropertyIds.PROP_OBJECT_LIST);
             LinkedList<BacnetObjectId> object_list = new LinkedList<BacnetObjectId>();
             foreach (BacnetValue value in value_list)
             {
@@ -134,30 +106,32 @@ namespace BacnetToDatabase
                 IList<BacnetValue> values = null;
                 try
                 {
-                    if (!bacnet_client.ReadPropertyRequest(device.Key, object_id, BacnetPropertyIds.PROP_PRESENT_VALUE, out values))
+                    values = _bacnet_client.ReadPropertyRequest(device.Key, object_id, BacnetPropertyIds.PROP_PRESENT_VALUE);
+                    if (values.Count == 0)
                     {
                         MessageBox.Show(this, "Couldn't fetch 'present value' for object: " + object_id.ToString());
                         continue;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     //perhaps the 'present value' is non existing - ignore
                     continue;
                 }
 
-                //store in DB
-                using (SqlCeCommand com = new SqlCeCommand("INSERT INTO SampleTable VALUES(@ObjectName,@PropertyId,@Value)", con))
+                using (B2DBDBContext context = new B2DBDBContext(_contextOptionsBuilder.Options))
                 {
-                    com.Parameters.AddWithValue("@ObjectName", object_id.ToString());
-                    com.Parameters.AddWithValue("@PropertyId", values[0].Tag.ToString());
-                    com.Parameters.AddWithValue("@Value", values[0].Value.ToString());
-                    com.ExecuteNonQuery();
+                    string sqlCommand = "INSERT INTO SampleTable VALUES(@ObjectName,@PropertyId,@Value)";
+
+                    IEnumerable<Microsoft.Data.Sqlite.SqliteParameter> parameters = new Microsoft.Data.Sqlite.SqliteParameter[] {
+                        new Microsoft.Data.Sqlite.SqliteParameter("@ObjectName",   object_id.ToString()),
+                        new Microsoft.Data.Sqlite.SqliteParameter("@PropertyId",   values[0].Tag.ToString()),
+                        new Microsoft.Data.Sqlite.SqliteParameter("@Value",   values[0].Value.ToString()),
+                    };
+
+                    context.Database.ExecuteSqlRaw(sqlCommand, parameters);
                 }
             }
-
-            //close DB
-            con.Close();
 
             //done
             MessageBox.Show(this, "Done!", "Done", MessageBoxButtons.OK, MessageBoxIcon.Information);
