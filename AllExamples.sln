@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28705.295
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Bacnet.Room.Simulator", "Bacnet.Room.Simulator\Bacnet.Room.Simulator.csproj", "{07552C4C-AD80-4645-AC91-D6138B5888AA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnotherStorageImplementation", "AnotherStorageImplementation\AnotherStorageImplementation.csproj", "{EE8E3C58-371E-4164-93DA-13D055D5BDDE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicAdviseCOV", "BasicAdviseCOV\BasicAdviseCOV.csproj", "{C501E026-4977-49C6-8DCB-5B9600C17FF1}"
@@ -23,16 +21,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectBrowseSample", "Objec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BacnetToDatabase", "BacnetToDatabase\BacnetToDatabase.csproj", "{3FACBC0B-55F7-4F4E-9486-066B3B8D220B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bacnet.Room.Simulator", "Bacnet.Room.Simulator\Bacnet.Room.Simulator.csproj", "{CF3CB9B9-FC48-423F-9459-FFFCEE17B964}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{07552C4C-AD80-4645-AC91-D6138B5888AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{07552C4C-AD80-4645-AC91-D6138B5888AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{07552C4C-AD80-4645-AC91-D6138B5888AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{07552C4C-AD80-4645-AC91-D6138B5888AA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EE8E3C58-371E-4164-93DA-13D055D5BDDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EE8E3C58-371E-4164-93DA-13D055D5BDDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE8E3C58-371E-4164-93DA-13D055D5BDDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -69,6 +65,10 @@ Global
 		{3FACBC0B-55F7-4F4E-9486-066B3B8D220B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FACBC0B-55F7-4F4E-9486-066B3B8D220B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FACBC0B-55F7-4F4E-9486-066B3B8D220B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF3CB9B9-FC48-423F-9459-FFFCEE17B964}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF3CB9B9-FC48-423F-9459-FFFCEE17B964}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF3CB9B9-FC48-423F-9459-FFFCEE17B964}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF3CB9B9-FC48-423F-9459-FFFCEE17B964}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

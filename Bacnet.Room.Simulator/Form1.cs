@@ -1,40 +1,18 @@
-﻿/**************************************************************************
-*                           MIT License
-* 
-* Copyright (C) 2015 Frederic Chaxel <fchaxel@free.fr>
-*
-* Permission is hereby granted, free of charge, to any person obtaining
-* a copy of this software and associated documentation files (the
-* "Software"), to deal in the Software without restriction, including
-* without limitation the rights to use, copy, modify, merge, publish,
-* distribute, sublicense, and/or sell copies of the Software, and to
-* permit persons to whom the Software is furnished to do so, subject to
-* the following conditions:
-*
-* The above copyright notice and this permission notice shall be included
-* in all copies or substantial portions of the Software.
-*
-* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*
-*********************************************************************/
+﻿using DemoServer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-using DemoServer;
 using System.IO.BACnet;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Bacnet.Room.Simulator
 {
-    public partial class BacForm : Form
+    public partial class Form1 : Form
     {
         Button[] Bts;
         Label[] Lbs;
@@ -54,29 +32,30 @@ namespace Bacnet.Room.Simulator
 
         BacnetObjectId Bac_ConsigneTemp = new BacnetObjectId(BacnetObjectTypes.OBJECT_ANALOG_VALUE, 0);
 
-        BacnetObjectId Bac_Mode =  new BacnetObjectId(BacnetObjectTypes.OBJECT_MULTI_STATE_VALUE, 0);
+        BacnetObjectId Bac_Mode = new BacnetObjectId(BacnetObjectTypes.OBJECT_MULTI_STATE_VALUE, 0);
         BacnetObjectId Bac_Niveausoufflage = new BacnetObjectId(BacnetObjectTypes.OBJECT_MULTI_STATE_VALUE, 1);
 
         BacnetObjectId Bac_Cmdchauffage = new BacnetObjectId(BacnetObjectTypes.OBJECT_BINARY_VALUE, 0);
         BacnetObjectId Bac_CmdClim = new BacnetObjectId(BacnetObjectTypes.OBJECT_BINARY_VALUE, 1);
 
-        RoomModel Room=new RoomModel(21);
+        RoomModel Room = new RoomModel(21);
 
-        public BacForm()
+        public Form1()
         {
             InitializeComponent();
             Bts = new Button[3] { Set1, Set2, Set3 };
-            Lbs = new Label[3] { Set1Label, Set2Label, Set3Label};
-            NivClim = new PictureBox[3] { Clim1, Clim2, Clim3};
-            NivChauf = new PictureBox[3] {Chauf1, Chauf2, Chauf3 };
+            Lbs = new Label[3] { Set1Label, Set2Label, Set3Label };
+            NivClim = new PictureBox[3] { Clim1, Clim2, Clim3 };
+            NivChauf = new PictureBox[3] { Chauf1, Chauf2, Chauf3 };
 
             bacnetid.Text = "Bacnet device Id :  " + BacnetActivity.deviceId.ToString();
 
             AdaptationFarenheit();
 
             AnimateData();
-            UpdateIhm();            
+            UpdateIhm();
         }
+
 
         private void AdaptationFarenheit()
         {
@@ -114,9 +93,9 @@ namespace Bacnet.Room.Simulator
         {
 
             if (Application.CurrentCulture.ToString() == "en-US")
-                return Truncate(C * 1.8 + 32).ToString()+"°F";
+                return Truncate(C * 1.8 + 32).ToString() + "°F";
             else
-                return Truncate(C).ToString()+"°C";
+                return Truncate(C).ToString() + "°C";
         }
 
         private float TempDegre2Value(double C)
@@ -139,12 +118,12 @@ namespace Bacnet.Room.Simulator
         private void AnimateData()
         {
 
-            BacnetValue bv1,bv2;
+            BacnetValue bv1, bv2;
             double TempCons;
-            double TempInt=0;
-            double TempEau=0;
+            double TempInt = 0;
+            double TempEau = 0;
             double TempExt = 0;
-            bool ModeChauf=false, ModeClim=false;
+            bool ModeChauf = false, ModeClim = false;
 
             for (int i = 0; i < 3; i++)
                 NivClim[i].BackColor = Color.White;
@@ -192,14 +171,14 @@ namespace Bacnet.Room.Simulator
                     {
                         Niveausoufflage = 0;
                         ModeChauf = false;
-                       
+
                     }
                     else
                     {
                         Niveausoufflage = (uint)(1 + (TempCons - TempInt) * 4);
                         if (Niveausoufflage > 3) Niveausoufflage = 3;
                         ModeChauf = true;
-                
+
                     }
 
                     pictureModeArret.Visible = false;
@@ -230,9 +209,9 @@ namespace Bacnet.Room.Simulator
                     pictureModeChaud.Visible = false;
                     pictureModeFroid.Visible = true;
                     break;
-             }
+            }
 
-            if (ModeChauf==true)
+            if (ModeChauf == true)
                 for (int i = 0; i < 3; i++)
                     if (i < Niveausoufflage)
                         NivChauf[i].BackColor = Color.Red;
@@ -259,7 +238,7 @@ namespace Bacnet.Room.Simulator
 
             // Les labels associés aux Bp pour choisir la temperature
             b = new BacnetObjectId(BacnetObjectTypes.OBJECT_CHARACTERSTRING_VALUE, 1);
-            bv=BacnetActivity.GetBacObjectPresentValue(b);
+            bv = BacnetActivity.GetBacObjectPresentValue(b);
             Set1Label.Text = (string)bv.Value;
             b = new BacnetObjectId(BacnetObjectTypes.OBJECT_CHARACTERSTRING_VALUE, 2);
             bv = BacnetActivity.GetBacObjectPresentValue(b);
@@ -276,11 +255,11 @@ namespace Bacnet.Room.Simulator
 
             bv = BacnetActivity.GetBacObjectPresentValue(Bac_ConsigneTemp);
             f = (float)bv.Value;
-            TempSet.Text = "T Set : " + TempDegre2Value(f).ToString()+"°";
+            TempSet.Text = "T Set : " + TempDegre2Value(f).ToString() + "°";
 
             bv = BacnetActivity.GetBacObjectPresentValue(Bac_TempExterieure);
             f = (float)bv.Value;
-            TempExt.Text = "T Ext : " + TempDegre2Value(f).ToString() + "°";          
+            TempExt.Text = "T Ext : " + TempDegre2Value(f).ToString() + "°";
         }
 
         private void TmrUpdate_Tick(object sender, EventArgs e)
@@ -341,6 +320,6 @@ namespace Bacnet.Room.Simulator
         }
 
 
-    }
 
+    }
 }

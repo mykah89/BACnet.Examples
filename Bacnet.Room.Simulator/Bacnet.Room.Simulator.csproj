@@ -1,87 +1,42 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <ProjectGuid>{07552C4C-AD80-4645-AC91-D6138B5888AA}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net40</TargetFramework>
-    <AssemblyTitle>Bacnet.Room.Simulator</AssemblyTitle>
-    <Company>MicroNetworkTech</Company>
-    <Product>Bacnet.Room.Simulator</Product>
-    <Copyright>Copyright © MicroNetworkTech 2014</Copyright>
-    <OutputPath>bin\$(Configuration)\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>nuage-soleil-meteo-icone-8152.ico</ApplicationIcon>
+    <Win32Resource />
+    <Company>MicroNetworkTech</Company>
+    <Copyright>Copyright © MicroNetworkTech 2014</Copyright>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
-    <DebugType>full</DebugType>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <DebugType>pdbonly</DebugType>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'R|AnyCPU'">
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="BACnet" Version="1.0.8.8-alpha" />
-    <PackageReference Include="PacketDotNet" Version="0.13.0" />
-    <PackageReference Include="SharpPcap" Version="4.2.0" />
+    <None Remove="DeviceStorage.xml" />
+    <None Remove="DeviceStorageUs.xml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Management" />
-    <Reference Include="System.Windows.Forms" />
+    <EmbeddedResource Include="DeviceStorage.xml" />
+    <EmbeddedResource Include="DeviceStorageUs.xml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Update="Form1.cs">
-      <SubType>Form</SubType>
+    <PackageReference Include="BACnet" Version="1.0.4-prerelease" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Update="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Update="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Update="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Update="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="DeviceStorage.xml">
-      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="README.md" />
-    <None Include="ImgMode\H_Froid.png" />
-    <None Include="ImgMode\H_Chaud.png" />
-    <None Include="ImgMode\HArret.png" />
-    <EmbeddedResource Include="DeviceStorageUs.xml">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Content Include="nuage-soleil-meteo-icone-8152.ico" />
-  </ItemGroup>
+
 </Project>
