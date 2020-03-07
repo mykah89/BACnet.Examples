@@ -3,6 +3,7 @@ using Bacnet.Server.Interface;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO.BACnet;
 using System.IO.BACnet.Storage.Objective;
 using System.IO.BACnet.Storage.Subscription;
@@ -11,43 +12,47 @@ using System.Threading.Tasks;
 
 namespace Bacnet.Server
 {
-    public class ObjectiveStorageBacnetActivity
+    public class ObjectiveStorageBacnetActivity : IDisposable
     {
-        public DeviceObject DeviceObject { get { return _device; } }
-        public Dictionary<BacnetObjectId, Subscription[]> Subscriptions { get { return _subscriptionManager.Subscriptions; } }
+        public DeviceObject DeviceObject { get; }
+        public IReadOnlyDictionary<BacnetObjectId, Subscription[]> Subscriptions { get { return _subscriptionManager.Subscriptions; } }
 
         private readonly BacnetClient _client;
-        private readonly DeviceObject _device;
         private readonly uint _deviceId;
         private readonly ILogger<ObjectiveStorageBacnetActivity> _logger;
         private readonly ISubscriptionManager _subscriptionManager;
         private readonly IWriteNotificationManager _writeNotificationManager;
 
-        public ObjectiveStorageBacnetActivity(DeviceObject deviceObject, BacnetClient client, ILoggerFactory loggerFactory)
+        public ObjectiveStorageBacnetActivity(DeviceObject deviceObject, BacnetClient client,
+            ISubscriptionManager subscriptionManager, IWriteNotificationManager writeNotificationManager,
+            ILoggerFactory loggerFactory)
         {
             _client = client;
-            _device = deviceObject;
-            _deviceId = deviceObject.PROP_OBJECT_IDENTIFIER.Instance;
+            DeviceObject = deviceObject;
+            _deviceId = DeviceObject.PROP_OBJECT_IDENTIFIER.Instance;
             _logger = loggerFactory.CreateLogger<ObjectiveStorageBacnetActivity>();
 
-            _subscriptionManager = new SubscriptionManager(loggerFactory);
-            _writeNotificationManager = new WriteNotificationManager(_subscriptionManager, deviceObject.PROP_OBJECT_IDENTIFIER.Instance, loggerFactory);
+            _subscriptionManager = subscriptionManager; 
+            _writeNotificationManager = writeNotificationManager;
+
+            //new SubscriptionManager(loggerFactory);
+            //new WriteNotificationManager(_subscriptionManager, deviceObject.PROP_OBJECT_IDENTIFIER.Instance, loggerFactory);
 
             foreach (BaCSharpObject obj in DeviceObject.ObjectsList)
             {
                 obj.OnWriteNotify += _writeNotificationManager.NotifyWrite;
             }
 
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_I_AM, true);
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_WHO_IS, true);
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_READ_PROP_MULTIPLE, true);
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_READ_PROPERTY, true);
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_WRITE_PROPERTY, true);
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_SUBSCRIBE_COV, true);
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_SUBSCRIBE_COV_PROPERTY, true);
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_CONFIRMED_COV_NOTIFICATION, true);
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_UNCONFIRMED_COV_NOTIFICATION, true);
-            deviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_READ_RANGE, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_I_AM, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_WHO_IS, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_READ_PROP_MULTIPLE, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_READ_PROPERTY, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_WRITE_PROPERTY, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_SUBSCRIBE_COV, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_SUBSCRIBE_COV_PROPERTY, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_CONFIRMED_COV_NOTIFICATION, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_UNCONFIRMED_COV_NOTIFICATION, true);
+            DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_READ_RANGE, true);
 
             _client.OnIam += handler_OnIam;
             _client.OnWhoIs += handler_OnWhoIs;
@@ -74,9 +79,42 @@ namespace Bacnet.Server
             // _device.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_DELETE_OBJECT, true);
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        public void Start() {
+            _client.Start();
+
+            if ((DeviceObject.FindBacnetObjectType(BacnetObjectTypes.OBJECT_NOTIFICATION_CLASS)) || (DeviceObject.FindBacnetObjectType(BacnetObjectTypes.OBJECT_SCHEDULE)))
+            {
+                // Send WhoIs : needed BY Notification & Schedule for deviceId<->IP endpoint
+                _client.WhoIs();
+
+                // Register the endpoint for IP Notification usage with IP:Port
+                DeviceObject.SetIpEndpoint(_client);
+            }
+
+            // bacnet says a broadcast i-am on startup is part of the standard
+            // in practice this may be an issue on larger networks
+            _client.Iam(_deviceId, (BacnetSegmentations)DeviceObject.PROP_SEGMENTATION_SUPPORTED);
+        }
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // free managed resources
+                if (_client != null)
+                {
+                    _client.Dispose();
+                }
+            }
+        }
+
         private void handler_OnIam(BacnetClient sender, BacnetAddress adr, uint device_id, uint max_apdu, BacnetSegmentations segmentation, ushort vendor_id)
         {
-            _device.ReceivedIam(sender, adr, device_id);
+            DeviceObject.ReceivedIam(sender, adr, device_id);
         }
         private void handler_OnReadPropertyMultipleRequest(BacnetClient sender, BacnetAddress adr, byte invoke_id, IList<BacnetReadAccessSpecification> properties, BacnetMaxSegments max_segments)
         {
@@ -88,7 +126,7 @@ namespace Bacnet.Server
                     List<BacnetReadAccessResult> values = new List<BacnetReadAccessResult>();
                     foreach (BacnetReadAccessSpecification p in properties)
                     {
-                        BaCSharpObject bacobj = _device.FindBacnetObject(p.objectIdentifier);
+                        BaCSharpObject bacobj = DeviceObject.FindBacnetObject(p.objectIdentifier);
 
                         if (bacobj != null)
                         {
@@ -130,7 +168,7 @@ namespace Bacnet.Server
         {
             Task.Factory.StartNew(async () =>
             {
-                BaCSharpObject bacobj = _device.FindBacnetObject(object_id);
+                BaCSharpObject bacobj = DeviceObject.FindBacnetObject(object_id);
 
                 if (bacobj != null)
                 {
@@ -189,7 +227,7 @@ namespace Bacnet.Server
             {
                 _logger.LogDebug($"Received subscription request for {monitoredObjectIdentifier.ToString()}, issue confirmed notifications: {issueConfirmedNotifications}.");
 
-                BaCSharpObject bacobj = _device.FindBacnetObject(monitoredObjectIdentifier);
+                BaCSharpObject bacobj = DeviceObject.FindBacnetObject(monitoredObjectIdentifier);
                 if (bacobj != null)
                 {
                     Subscription sub = _subscriptionManager.HandleSubscriptionRequest(sender, adr, invoke_id, subscriberProcessIdentifier, monitoredObjectIdentifier, (uint)BacnetPropertyIds.PROP_ALL, cancellationRequest, issueConfirmedNotifications, lifetime, 0);
@@ -230,7 +268,7 @@ namespace Bacnet.Server
         {
             Task.Factory.StartNew(async () =>
             {
-                BaCSharpObject bacobj = _device.FindBacnetObject(monitoredObjectIdentifier);
+                BaCSharpObject bacobj = DeviceObject.FindBacnetObject(monitoredObjectIdentifier);
                 if (bacobj != null)
                 {
                     Subscription sub = _subscriptionManager.HandleSubscriptionRequest(sender, adr, invoke_id, subscriberProcessIdentifier, monitoredObjectIdentifier, monitoredProperty.propertyIdentifier, cancellationRequest, issueConfirmedNotifications, lifetime, covIncrement);
@@ -275,7 +313,7 @@ namespace Bacnet.Server
             if (low_limit != -1 && _deviceId < low_limit) return;
             else if (high_limit != -1 && _deviceId > high_limit) return;
 
-            BacnetSegmentations supportedSegmentation = (BacnetSegmentations)_device.PROP_SEGMENTATION_SUPPORTED;
+            BacnetSegmentations supportedSegmentation = (BacnetSegmentations)DeviceObject.PROP_SEGMENTATION_SUPPORTED;
 
             if (sender?.Transport?.GetBroadcastAddress() == adr)
             {
@@ -288,7 +326,7 @@ namespace Bacnet.Server
         }
         private void handler_OnWritePropertyRequest(BacnetClient sender, BacnetAddress adr, byte invoke_id, BacnetObjectId object_id, BacnetPropertyValue value, BacnetMaxSegments max_segments)
         {
-            BaCSharpObject bacobj = _device.FindBacnetObject(object_id);
+            BaCSharpObject bacobj = DeviceObject.FindBacnetObject(object_id);
 
             if (bacobj != null)
             {

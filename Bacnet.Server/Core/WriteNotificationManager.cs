@@ -54,11 +54,11 @@ namespace Bacnet.Server.Core
         }
         private class CovManagementNotifyValue
         {
-            public CovManagementNotifyValue(Task task, CancellationTokenSource cancellationTokenSource, DateTime utcNow)
+            public CovManagementNotifyValue(Task task, CancellationTokenSource cancellationTokenSource, DateTime timestamp)
             {
                 Task = task;
                 CancellationTokenSource = cancellationTokenSource;
-                Timestamp = utcNow;
+                Timestamp = timestamp;
             }
 
             public CancellationTokenSource CancellationTokenSource { get; set; }
