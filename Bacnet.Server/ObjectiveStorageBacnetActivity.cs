@@ -32,7 +32,7 @@ namespace Bacnet.Server
             _deviceId = DeviceObject.PROP_OBJECT_IDENTIFIER.Instance;
             _logger = loggerFactory.CreateLogger<ObjectiveStorageBacnetActivity>();
 
-            _subscriptionManager = subscriptionManager; 
+            _subscriptionManager = subscriptionManager;
             _writeNotificationManager = writeNotificationManager;
 
             //new SubscriptionManager(loggerFactory);
@@ -54,14 +54,14 @@ namespace Bacnet.Server
             DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_UNCONFIRMED_COV_NOTIFICATION, true);
             DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_READ_RANGE, true);
 
-            _client.OnIam += handler_OnIam;
-            _client.OnWhoIs += handler_OnWhoIs;
-            _client.OnReadPropertyRequest += handler_OnReadPropertyRequest;
-            _client.OnReadPropertyMultipleRequest += handler_OnReadPropertyMultipleRequest;
-            _client.OnWritePropertyRequest += handler_OnWritePropertyRequest;
-            _client.OnSubscribeCOV += handler_OnSubscribeCOV;
-            _client.OnSubscribeCOVProperty += handler_OnSubscribeCOVProperty;
-            _client.OnReadRange += handler_OnReadRange;
+            foreach (KeyValuePair<BacnetServicesSupported, Action> eventHandler in eventHandlers())
+            {
+                if (DeviceObject.PROP_PROTOCOL_SERVICES_SUPPORTED.GetBit((byte)eventHandler.Key)
+                    || DeviceObject.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED.GetBit((byte)BacnetServicesSupported.MAX_BACNET_SERVICES_SUPPORTED))
+                {
+                    eventHandler.Value.Invoke();
+                }
+            }
 
             // todo: future implementation
 
@@ -84,21 +84,30 @@ namespace Bacnet.Server
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        public void Start() {
+        public void Start()
+        {
             _client.Start();
 
             if ((DeviceObject.FindBacnetObjectType(BacnetObjectTypes.OBJECT_NOTIFICATION_CLASS)) || (DeviceObject.FindBacnetObjectType(BacnetObjectTypes.OBJECT_SCHEDULE)))
             {
-                // Send WhoIs : needed BY Notification & Schedule for deviceId<->IP endpoint
-                _client.WhoIs();
+                if (DeviceObject.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED.GetBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_WHO_IS)
+                    || DeviceObject.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED.GetBit((byte)BacnetServicesSupported.MAX_BACNET_SERVICES_SUPPORTED))
+                {
+                    // Send WhoIs : needed BY Notification & Schedule for deviceId<->IP endpoint
+                    _client.WhoIs();
+                }
 
                 // Register the endpoint for IP Notification usage with IP:Port
                 DeviceObject.SetIpEndpoint(_client);
             }
 
-            // bacnet says a broadcast i-am on startup is part of the standard
-            // in practice this may be an issue on larger networks
-            _client.Iam(_deviceId, (BacnetSegmentations)DeviceObject.PROP_SEGMENTATION_SUPPORTED);
+            if (DeviceObject.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED.GetBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_I_AM)
+                || DeviceObject.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED.GetBit((byte)BacnetServicesSupported.MAX_BACNET_SERVICES_SUPPORTED))
+            {
+                // bacnet says a broadcast i-am on startup is part of the standard
+                // in practice this may be an issue on larger networks
+                _client.Iam(_deviceId, (BacnetSegmentations)DeviceObject.PROP_SEGMENTATION_SUPPORTED);
+            }
         }
         protected virtual void Dispose(bool disposing)
         {
@@ -112,6 +121,19 @@ namespace Bacnet.Server
             }
         }
 
+        private Dictionary<BacnetServicesSupported, Action> eventHandlers()
+        {
+            return new Dictionary<BacnetServicesSupported, Action>()
+            {
+                { BacnetServicesSupported.SERVICE_SUPPORTED_I_AM, () => _client.OnWhoIs += handler_OnWhoIs},
+                { BacnetServicesSupported.SERVICE_SUPPORTED_READ_PROPERTY, () => _client.OnReadPropertyRequest += handler_OnReadPropertyRequest },
+                { BacnetServicesSupported.SERVICE_SUPPORTED_READ_PROP_MULTIPLE, () => _client.OnReadPropertyMultipleRequest += handler_OnReadPropertyMultipleRequest },
+                { BacnetServicesSupported.SERVICE_SUPPORTED_WRITE_PROPERTY, () => _client.OnWritePropertyRequest += handler_OnWritePropertyRequest },
+                { BacnetServicesSupported.SERVICE_SUPPORTED_SUBSCRIBE_COV, () => _client.OnSubscribeCOV += handler_OnSubscribeCOV },
+                { BacnetServicesSupported.SERVICE_SUPPORTED_SUBSCRIBE_COV_PROPERTY, () => _client.OnSubscribeCOVProperty += handler_OnSubscribeCOVProperty },
+                { BacnetServicesSupported.SERVICE_SUPPORTED_READ_RANGE, () => _client.OnReadRange += handler_OnReadRange },
+            };
+        }
         private void handler_OnIam(BacnetClient sender, BacnetAddress adr, uint device_id, uint max_apdu, BacnetSegmentations segmentation, ushort vendor_id)
         {
             DeviceObject.ReceivedIam(sender, adr, device_id);
