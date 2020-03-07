@@ -7,6 +7,7 @@ using System.Collections.ObjectModel;
 using System.IO.BACnet;
 using System.IO.BACnet.Storage.Objective;
 using System.IO.BACnet.Storage.Subscription;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -54,14 +55,43 @@ namespace Bacnet.Server
             DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_UNCONFIRMED_COV_NOTIFICATION, true);
             DeviceObject.SetSupportedServiceBit((byte)BacnetServicesSupported.SERVICE_SUPPORTED_READ_RANGE, true);
 
-            foreach (KeyValuePair<BacnetServicesSupported, Action> eventHandler in eventHandlers())
+
+            // set up handlers if available
+            foreach (byte b in DeviceObject.PROP_PROTOCOL_SERVICES_SUPPORTED.Value)
             {
-                if (DeviceObject.PROP_PROTOCOL_SERVICES_SUPPORTED.GetBit((byte)eventHandler.Key)
-                    || DeviceObject.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED.GetBit((byte)BacnetServicesSupported.MAX_BACNET_SERVICES_SUPPORTED))
+                List<byte> allSupportedServices = Enum.GetValues(typeof(BacnetServicesSupported)).Cast<byte>().ToList();
+                if (!allSupportedServices.Contains(b))
                 {
-                    eventHandler.Value.Invoke();
+                    throw new InvalidOperationException($"Unrecognized byte for bacnet service supported.{b}");
                 }
+                else
+                {
+                    KeyValuePair<BacnetServicesSupported, Action> implementedHandler = eventHandlers().FirstOrDefault(eh => (byte)eh.Key == b);
+
+                    if (implementedHandler.Equals(default(KeyValuePair<BacnetServicesSupported, Action>)))
+                    {
+                        throw new InvalidOperationException($"No handler for supported service could be located for {b}.");
+                    }
+                    else
+                    {
+                        implementedHandler.Value.Invoke();
+                    }
+                }
+                // todo handle max services supported
+                //if (b == BacnetServicesSupported.MAX_BACNET_SERVICES_SUPPORTED)
+                //{
+
+                //}
             }
+
+            //foreach (KeyValuePair<BacnetServicesSupported, Action> eventHandler in eventHandlers())
+            //{
+            //    if (DeviceObject.PROP_PROTOCOL_SERVICES_SUPPORTED.GetBit((byte)eventHandler.Key)
+            //        || DeviceObject.PROP_PROTOCOL_OBJECT_TYPES_SUPPORTED.GetBit((byte)BacnetServicesSupported.MAX_BACNET_SERVICES_SUPPORTED))
+            //    {
+            //        eventHandler.Value.Invoke();
+            //    }
+            //}
 
             // todo: future implementation
 
